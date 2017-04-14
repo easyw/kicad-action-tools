@@ -41,6 +41,8 @@ _dxf exporter for mechanical layers of a kicad_pcb board_
 - the dxf generated has single line draw as it should be for mechanical interchange (this option is missing in pcbnew plot)  
 
 creates DXF file of technical layers of the selected kicad pcb board
+  
+![kicad pcb2dxf](screenshots/export-pcb2dxf.png)  
 
 (this is a part of kicad StepUp tools; please refer to kicad StepUp tools for the full licence)
 
