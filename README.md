@@ -31,9 +31,9 @@ Launch the Annular Check script in pcbnew from Tools menu:
 ![Annular Check](screenshots/annular-checker.gif)
 
 ### todo (annular_check)
-- add colors to output list  
+- [] add colors to output list  
 
-
+---
 ## action_menu_pcb2dxf
 **kicadpcb2dxf**  
 _dxf exporter for mechanical layers of a kicad_pcb board_  
@@ -46,8 +46,8 @@ creates DXF file of technical layers of the selected kicad pcb board
 
 (this is a part of kicad StepUp tools; please refer to kicad StepUp tools for the full licence)
 
- kicadpcb2dxf: Copyright (c) 2015 Maurice easyw
- dxf_parser="r12writer from ezdxf 0.7.6": Copyright (C) 2016, Manfred Moitzi with MIT License
+ kicadpcb2dxf: Copyright (c) 2015 Maurice easyw  
+ dxf_parser="r12writer from ezdxf 0.7.6": Copyright (C) 2016, Manfred Moitzi with MIT License  
  
 done:  
 - [x] added line, circle, arc primitives  
@@ -56,3 +56,7 @@ done:
 - [x] added text support (mirror & alignement not supported)  
 - [x] added multiline text  
 - [x] add quote support  
+  
+### todo (kicadpcb2dxf)
+- []  
+---
