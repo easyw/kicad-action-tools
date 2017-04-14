@@ -31,7 +31,7 @@ Launch the Annular Check script in pcbnew from Tools menu:
 ![Annular Check](screenshots/annular-checker.gif)
 
 ### todo (annular_check)
-- [] add colors to output list  
+- [ ] add colors to output list  
 
 ---
 ## action_menu_pcb2dxf
@@ -58,5 +58,5 @@ done:
 - [x] add quote support  
   
 ### todo (kicadpcb2dxf)
-- []  
+- [ ]  
 ---
