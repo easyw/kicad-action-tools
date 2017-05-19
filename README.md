@@ -10,7 +10,7 @@ A script to export technical layers of kicad PCB to DXF
 DXF generated file has single line draw as it should be for mechanical interchange (this option is missing in pcbnew plot)  
   
 - ### action_menu_move_to_layer
-A script to Move Selected Drawing(s) to choosen new Layer (available only in GAL) 
+A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
   
 ---
 ## action_menu_annular_check.py
@@ -64,12 +64,12 @@ done:
 
 ---
 ## action_menu_move_to_layer
-A script to Move Selected Drawing(s) to choosen new Layer (available only in GAL) 
+A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
 
 requirements: KiCAD pcbnew > 4.0 built with KICAD_SCRIPTING_ACTION_MENU option activated  
 release "1.1.0"  
 
-    A script to Move Selected Drawing(s) to choosen new Layer (available only in GAL) 
+    A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
     How to use:
     - move to GAL
     - select some draw objects
@@ -77,5 +77,5 @@ release "1.1.0"
     - select the new layer
     - selected draw objects will be moved to new layer
 
-Launch the 'Move Selected drawings to choosen Layer' script in pcbnew from Tools menu  
-![Move Selected drawings to choosen Layer](screenshots/move_to_layer.png)
+Launch the 'Move Selected drawings to chosen Layer' script in pcbnew from Tools menu  
+![Move Selected drawings to chosen Layer](screenshots/move_to_layer.png)

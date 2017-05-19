@@ -29,7 +29,7 @@ ___version___="1.1.0"
 
 class move_to_draw_layer( pcbnew.ActionPlugin ):
     """
-    A script to Move Selected Drawing(s) to choosen new Layer (available only in GAL) 
+    A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
     How to use:
     - move to GAL
     - select some draw objects
@@ -46,9 +46,9 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Move Selected drawings to choosen Layer"
+        self.name = "Move Selected drawings to chosen Layer"
         self.category = "Modify Drawing PCB"
-        self.description = "Move Selected drawings to choosen Layer on an existing PCB"
+        self.description = "Move Selected drawings to chosen Layer on an existing PCB"
 
     def Run( self ):
         found_selected=False
