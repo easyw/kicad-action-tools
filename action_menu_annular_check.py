@@ -15,7 +15,7 @@
 
 #  annular.py
 
-___version___="1.5.3"
+___version___="1.5.4"
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
 # (consider always drill +0.1)
@@ -224,8 +224,11 @@ class annular_check( pcbnew.ActionPlugin ):
             LogMsg+=msg+'\n'
             
             for module in board.GetModules():
-                for pad in module.Pads():
-                    #print(pad.GetAttribute())
+                try:
+                    module_Pads=module.PadsList()
+                except:
+                    module_Pads=module.Pads()
+                for pad in module_Pads:                    #print(pad.GetAttribute())
                     if pad.GetAttribute() == PAD_ATTRIB_STANDARD: #TH pad
                         ARv = annring_size(pad)
                         #print(f_mm(ARv))
