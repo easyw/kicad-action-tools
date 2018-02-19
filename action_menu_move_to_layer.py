@@ -24,7 +24,7 @@ import pcbnew
 from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
-___version___="1.1.0"
+___version___="1.1.1"
 
 
 class move_to_draw_layer( pcbnew.ActionPlugin ):
@@ -185,6 +185,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 LogMsg+="use GAL for selecting lines"
                 wx.LogMessage(LogMsg)
             else:
+                pcbnew.Refresh()
                 LogMsg="selected drawings moved to "+frame.layerSelection+" layer"
                 wx.LogMessage(LogMsg)
         
