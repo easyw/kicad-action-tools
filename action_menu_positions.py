@@ -39,7 +39,7 @@ def generate_POS():
     #lsep=os.linesep
     lsep='\n'
     
-    LogMsg1=lsep+"reading from "+ dirpath + lsep
+    LogMsg1=lsep+"reading from:" + lsep + dirpath + lsep + lsep
     out_filename_top_SMD=path+os.sep+name+"_POS_top_SMD.txt"
     out_filename_bot_SMD=path+os.sep+name+"_POS_bot_SMD.txt"
     out_filename_top_THD=path+os.sep+name+"_POS_top_THD.txt"
@@ -48,13 +48,13 @@ def generate_POS():
     out_filename_bot_VIRTUAL=path+os.sep+name+"_POS_bot_Virtual.txt"
     out_filename_ALL=path+os.sep+name+"_POS_All.txt"
     #out_filename=path+os.sep+name+"_POS.txt"
-    LogMsg1+="writing to "+out_filename_top_SMD + lsep
-    LogMsg1+="writing to "+out_filename_bot_SMD + lsep
-    LogMsg1+="writing to "+out_filename_top_THD + lsep
-    LogMsg1+="writing to "+out_filename_bot_THD + lsep
-    LogMsg1+="writing to "+out_filename_top_VIRTUAL + lsep
-    LogMsg1+="writing to "+out_filename_bot_VIRTUAL + lsep
-    LogMsg1+="writing to "+out_filename_ALL + lsep
+    LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
+    LogMsg1+="written to:" + lsep + out_filename_bot_SMD + lsep
+    LogMsg1+="written to:" + lsep + out_filename_top_THD + lsep
+    LogMsg1+="written to:" + lsep + out_filename_bot_THD + lsep
+    LogMsg1+="written to:" + lsep + out_filename_top_VIRTUAL + lsep
+    LogMsg1+="written to:" + lsep + out_filename_bot_VIRTUAL + lsep
+    LogMsg1+="written to:" + lsep + out_filename_ALL + lsep
     # print (LogMsg)
     # 
     # print ("### Module positions - created on %s ###" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
@@ -254,10 +254,10 @@ class generatePOS( pcbnew.ActionPlugin ):
                 self.title = wx.StaticText(self.panel, label="Generate POS debug:")
                 #self.result = wx.StaticText(self.panel, label="")
                 #self.result.SetForegroundColour('#FF0000')
-                #self.button = wx.Button(self.panel, label="Save")
+                self.button = wx.Button(self.panel, label="Close")
                 #self.lblname = wx.StaticText(self.panel, label="Your name:")
                 #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
-                self.editname = wx.TextCtrl(self.panel, size = (300, 400), style = wx.TE_MULTILINE|wx.TE_READONLY)
+                self.editname = wx.TextCtrl(self.panel, size = (600, 500), style = wx.TE_MULTILINE|wx.TE_READONLY)
         
         
                 # Set sizer for the frame, so we can change frame size to match widgets
@@ -270,25 +270,25 @@ class generatePOS( pcbnew.ActionPlugin ):
                 #self.sizer.Add(self.result, (1, 0))
                 #self.sizer.Add(self.lblname, (1, 0))
                 self.sizer.Add(self.editname, (1, 0))
-                #self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
+                self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
         
                 # Set simple sizer for a nice border
                 self.border = wx.BoxSizer()
                 self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
-        
+                
                 # Use the sizers
                 self.panel.SetSizerAndFit(self.border)  
                 self.SetSizerAndFit(self.windowSizer)  
                 #self.result.SetLabel(msg)
                 # Set event handlers
-                #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
                 #self.Show()
-                #self.Bind(wx.EVT_CLOSE,self.OnClose)
+                self.button.Bind(wx.EVT_BUTTON, self.OnClose)
+                self.Bind(wx.EVT_CLOSE,self.OnClose)
             
-            #def OnClose(self,e):
-            #    #wx.LogMessage("c")
-            #    e.Skip()
-                #self.Close()
+            def OnClose(self,e):
+                #wx.LogMessage("c")
+                e.Skip()
+                self.Close()
             
             #def OnButton(self, e):
             #    self.result.SetLabel(self.editname.GetValue())
