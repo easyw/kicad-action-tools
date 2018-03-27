@@ -24,7 +24,7 @@ import pcbnew
 from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
-___version___="1.1.2"
+___version___="1.1.1"
 
 
 class move_to_draw_layer( pcbnew.ActionPlugin ):
@@ -118,8 +118,6 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 # Set sizer for the panel content
                 self.sizer = wx.GridBagSizer(5, 0)
                 self.sizer.Add(self.title, (0, 0))
-                self.button = wx.Button(self.panel, label="OK")
-                self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
                 #self.sizer.Add(self.result, (1, 0))
                 #self.sizer.Add(self.lblname, (1, 0))
                 ##self.sizer.Add(self.editname, (1, 0))
@@ -133,21 +131,12 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 # Use the sizers
                 self.panel.SetSizerAndFit(self.border)  
                 self.SetSizerAndFit(self.windowSizer)  
-                
-                #self.button = wx.Button(self.panel, label="Close")
-                self.button.Bind(wx.EVT_BUTTON, self.OnClose)
-                self.Bind(wx.EVT_CLOSE,self.OnClose)
-            
-            #----------------------------------------------------------------------
-            def OnClose(self,e):
-                #wx.LogMessage("c")
-                e.Skip()
-                self.Close()
                 #self.result.SetLabel(msg)
                 # Set event handlers
                 #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
                 #self.Show()
                 #self.Bind(wx.EVT_CLOSE,self.OnClose)
+            #----------------------------------------------------------------------
             def onCombo(self, event):
                 """
                 """
