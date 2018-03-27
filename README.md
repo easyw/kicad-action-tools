@@ -11,6 +11,9 @@ DXF generated file has single line draw as it should be for mechanical interchan
   
 - ### action_menu_move_to_layer
 A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
+
+- ### action_positions
+A script to Generate Position Files for SMD, THD, Virtual, ALL 
   
 ---
 ## action_menu_annular_check.py
@@ -79,3 +82,13 @@ release "1.1.0"
 
 Launch the 'Move Selected drawings to chosen Layer' script in pcbnew from Tools menu  
 ![Move Selected drawings to chosen Layer](screenshots/move_to_layer.png)
+
+- ### action_positions
+A script to Generate Position Files for SMD, THD, Virtual, ALL
+
+The script will generate Fabrication POS files for:
+
+- SMD
+- THD
+- VIRTUAL
+- ALL
