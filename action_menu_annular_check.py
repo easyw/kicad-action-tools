@@ -15,7 +15,10 @@
 
 #  annular.py
 
-___version___="1.5.4"
+
+___version___="1.5.8"
+
+global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
 # (consider always drill +0.1)
@@ -30,12 +33,16 @@ MIN_AR_SIZE_V = AR_SET_V * mm_ius
 
 import sys
 import wx
+import wx.richtext
 import subprocess
 import os
 import pcbnew
 from pcbnew import *
-# import base64
+import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
+sys.path.append(os.path.dirname(__file__))
+
+
 
 class annular_check( pcbnew.ActionPlugin ):
     """
@@ -67,6 +74,105 @@ class annular_check( pcbnew.ActionPlugin ):
 
     def Run( self ):
         
+        ###########################################################################
+        ## Class AR_Prm
+        ###########################################################################
+        
+        class AR_Prm ( wx.Dialog ):
+            
+            def __init__( self, parent ):
+                wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = "AR parameters", pos = wx.DefaultPosition, size = wx.Size( 320,193 ), style = wx.DEFAULT_DIALOG_STYLE )
+                
+                self.SetSizeHints( 500,500 )
+                
+                self.SetIcon(PyEmbeddedImage(annular_ico_b64_data).GetIcon())
+                
+                bSizer1 = wx.BoxSizer( wx.VERTICAL )
+                
+                gSizer2 = wx.GridSizer( 0, 2, 0, 0 )
+                
+                self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"PHD margin", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
+                self.m_staticText11.Wrap( -1 )
+                
+                gSizer2.Add( self.m_staticText11, 0, wx.ALL, 5 )
+                
+                self.m_textPHD = wx.TextCtrl( self, wx.ID_ANY, str(DRL_EXTRA), wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer2.Add( self.m_textPHD, 0, wx.ALL, 5 )
+                
+                self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"AR for pads", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
+                self.m_staticText1.Wrap( -1 )
+                
+                gSizer2.Add( self.m_staticText1, 0, wx.ALL, 5 )
+                
+                self.m_textAR_SET = wx.TextCtrl( self, wx.ID_ANY, str(AR_SET), wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer2.Add( self.m_textAR_SET, 0, wx.ALL, 5 )
+                
+                self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"AR for vias", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
+                self.m_staticText12.Wrap( -1 )
+                
+                gSizer2.Add( self.m_staticText12, 0, wx.ALL, 5 )
+                
+                self.m_textAR_SET_V = wx.TextCtrl( self, wx.ID_ANY, str(AR_SET_V), wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer2.Add( self.m_textAR_SET_V, 0, wx.ALL, 5 )
+                
+                
+                bSizer1.Add( gSizer2, 1, wx.EXPAND, 5 )
+                
+                gSizer1 = wx.GridSizer( 0, 2, 0, 0 )
+                
+                self.m_ok_btn = wx.Button( self, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer1.Add( self.m_ok_btn, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+                
+                # self.m_cancel_btn = wx.Button( self, wx.ID_ANY, u"Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+                # gSizer1.Add( self.m_cancel_btn, 0, wx.ALL, 5 )
+                
+                
+                bSizer1.Add( gSizer1, 1, wx.EXPAND, 5 )
+                
+                
+                self.SetSizer( bSizer1 )
+                self.Layout()
+                
+                self.Centre( wx.BOTH )
+                
+                #### ----- connections
+                # Connect Events
+                self.Bind(wx.EVT_BUTTON, self.OnClickOK, self.m_ok_btn)
+                # self.Bind(wx.EVT_BUTTON, self.OnClickCancel, self.m_cancel_btn)
+                # Tooltips
+                #self.m_cancel_btn.SetToolTip( wx.ToolTip(u"Cancel" ))
+                self.m_ok_btn.SetToolTip( wx.ToolTip(u"Confirm" ))
+                self.m_staticText1.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
+                self.m_textAR_SET.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
+                self.m_textAR_SET_V.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
+                self.m_staticText12.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
+                self.m_textPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
+                self.m_staticText11.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
+                
+            def __del__( self ):
+                pass
+        
+            def OnClickOK(self, event):  
+                global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V
+                
+                self.m_ok_btn.SetLabel("Clicked")
+                phd = float(self.m_textPHD.GetValue().replace(',','.'))
+                ar  = float(self.m_textAR_SET.GetValue().replace(',','.'))
+                arv = float(self.m_textAR_SET_V.GetValue().replace(',','.'))
+                DRL_EXTRA=phd
+                DRL_EXTRA_ius=DRL_EXTRA * mm_ius
+                
+                AR_SET = ar   #minimum annular accepted for pads
+                MIN_AR_SIZE = AR_SET * mm_ius
+                
+                AR_SET_V = arv  #minimum annular accepted for vias
+                MIN_AR_SIZE_V = AR_SET_V * mm_ius
+                self.Destroy()
+                
+            def OnClickCancel(self, event):  
+                self.m_cancel_btn.SetLabel("Clicked")
+                self.Destroy()
+        
         #wx.MessageDialog(self.frame,"ciao")
         #subprocess.check_call(["C:\pathToYourProgram\yourProgram.exe", "your", "arguments", "comma", "separated"])
         #http://stackoverflow.com/questions/1811691/running-an-outside-program-executable-in-python
@@ -75,7 +181,7 @@ class annular_check( pcbnew.ActionPlugin ):
             The default frame
             http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
             """
-        
+            global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations
             #----------------------------------------------------------------------
             #def __init__(self):
             #    """Constructor"""
@@ -92,25 +198,39 @@ class annular_check( pcbnew.ActionPlugin ):
                 self.SetIcon(PyEmbeddedImage(annular_ico_b64_data).GetIcon())
                 #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
                 self.panel = wx.Panel(self)     
-                self.title = wx.StaticText(self.panel, label="Annular Check result:")
+                
+                if found_violations:
+                    self.title = wx.StaticText(self.panel, label="")
+                    #self.title.SetForegroundColour('#FF0000')
+                    #self.title.SetBackgroundColour('#FF0000')
+                    #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+                    #self.title.SetFont(font)
+                else:
+                    self.title = wx.StaticText(self.panel, label="")
+                    #self.title.SetBackgroundColour('#00FF00')
+                    #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+                    #self.title.SetFont(font)
                 #self.result = wx.StaticText(self.panel, label="")
                 #self.result.SetForegroundColour('#FF0000')
                 #self.button = wx.Button(self.panel, label="Save")
                 #self.lblname = wx.StaticText(self.panel, label="Your name:")
                 #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
-                self.editname = wx.TextCtrl(self.panel, size = (300, 400), style = wx.TE_MULTILINE|wx.TE_READONLY)
-        
+                ##self.editname = wx.TextCtrl(self.panel, size = (400, 400), style = wx.TE_MULTILINE|wx.TE_READONLY)
+                self.m_richText1 = wx.richtext.RichTextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, size = (400, 400), style = 0|wx.VSCROLL|wx.HSCROLL|wx.WANTS_CHARS )#  wx.TE_MULTILINE|wx.TE_READONLY) #0|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
+                #bSizer1.Add( self.m_richText1, 1, wx.EXPAND |wx.ALL, 5 )
+		
         
                 # Set sizer for the frame, so we can change frame size to match widgets
                 self.windowSizer = wx.BoxSizer()
                 self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
-        
+                
                 # Set sizer for the panel content
                 self.sizer = wx.GridBagSizer(5, 0)
                 self.sizer.Add(self.title, (0, 0))
                 #self.sizer.Add(self.result, (1, 0))
                 #self.sizer.Add(self.lblname, (1, 0))
-                self.sizer.Add(self.editname, (1, 0))
+                ## self.sizer.Add(self.editname, (1, 0))
+                self.sizer.Add(self.m_richText1, (1, 0))
                 #self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
         
                 # Set simple sizer for a nice border
@@ -134,7 +254,17 @@ class annular_check( pcbnew.ActionPlugin ):
             #def OnButton(self, e):
             #    self.result.SetLabel(self.editname.GetValue())
             def setMsg(self, t_msg):
-                self.editname.SetValue(t_msg)
+                pass
+                #self.editname.SetValue(t_msg)
+                #self.m_richText1.BeginBold()
+                #self.m_richText1.WriteText(" You are in ")
+                #self.m_richText1.BeginTextColour('red')
+                #self.m_richText1.WriteText("danger ")
+                #self.m_richText1.EndTextColour()
+                #self.m_richText1.WriteText("at that spot!")
+                #self.m_richText1.EndBold()
+                #self.m_richText1.SetValue(t_msg)
+                #self.m_htmlWin1.SetPage(t_msg)
                 
             
         def annring_size(pad):
@@ -193,12 +323,29 @@ class annular_check( pcbnew.ActionPlugin ):
         if len(fileName)==0:
             wx.LogMessage("a board needs to be saved/loaded!")
         else:
-                
-            LogMsg=''
+            found_violations=False
+            frame1 = AR_Prm(None)
+            #frame = wx.Frame(None)
+            frame1.Center()
+            #frame.setMsg(LogMsg)
+            frame1.ShowModal()
+            frame1.Destroy()
+            
+            frame = displayDialog(None)
+            LogMsg=""
+            writeTxt= frame.m_richText1.WriteText
+            rt = frame.m_richText1
+            rt.BeginItalic()
+            writeTxt("'action_menu_annular_check.py'\n")
+            #frame.m_richText1.WriteText("'action_menu_annular_check.py'\n")
             msg="'action_menu_annular_check.py'\n"
             msg+="version = "+___version___
+            writeTxt("version = "+___version___)
             msg+="\nTesting PCB for Annular Rings\nTH Pads >= "+repr(AR_SET)+" Vias >= "+repr(AR_SET_V)+"\nPHD margin on PTH = "+ repr(DRL_EXTRA)
-             #print (msg)
+            writeTxt("\nTesting PCB for Annular Rings\nTH Pads >= "+repr(AR_SET)+" Vias >= "+repr(AR_SET_V)+"\nPHD margin on PTH = "+ repr(DRL_EXTRA))
+            rt.EndItalic()
+            writeTxt('\n\n')
+            print (msg)
             LogMsg+=msg+'\n\n'
             
             # print "LISTING VIAS:"
@@ -212,6 +359,9 @@ class annular_check( pcbnew.ActionPlugin ):
                     #            print("AR violation at %s." % (pad.GetPosition() / mm_ius ))  Raw units, needs fixing
                         XYpair =  item.GetPosition()
                         msg="AR Via violation of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1]) 
+                        rt.BeginTextColour('red')
+                        writeTxt("AR Via violation of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1])+'\n')
+                        rt.EndTextColour()
                         #print (msg)
                         LogMsg+=msg+'\n'
                         FailCV = FailCV+1
@@ -220,6 +370,15 @@ class annular_check( pcbnew.ActionPlugin ):
                 #print type(item)
             
             msg="VIAS that Pass = "+repr(PassCV)+"; Fails = "+repr(FailCV)
+            if FailCV >0:
+                rt.BeginBold()
+            writeTxt("VIAS that Pass = "+repr(PassCV)+"; ")
+            if FailCV >0:
+                rt.BeginTextColour('red')
+            writeTxt("Fails = "+repr(FailCV)+'\n\n')
+            if FailCV >0:
+                rt.EndTextColour()
+                rt.EndBold()
             print(msg)
             LogMsg+=msg+'\n'
             
@@ -236,6 +395,9 @@ class annular_check( pcbnew.ActionPlugin ):
             #                print("AR violation at %s." % (pad.GetPosition() / mm_ius ))  Raw units, needs fixing
                             XYpair =  pad.GetPosition()
                             msg="AR PTH violation of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1]) 
+                            rt.BeginTextColour('red')
+                            writeTxt("AR PTH violation of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1])+'\n')
+                            rt.EndTextColour()
                             #print (msg)
                             LogMsg+=msg+'\n'
                             FailC = FailC+1
@@ -250,6 +412,9 @@ class annular_check( pcbnew.ActionPlugin ):
             #                    print("AR violation at %s." % (pad.GetPosition() / mm_ius ))  Raw units, needs fixing
                                 XYpair =  pad.GetPosition()
                                 msg="AR NPTH warning of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1]) 
+                                rt.BeginTextColour('red')
+                                writeTxt("AR NPTH warning of "+f_mm(ARv)+" at XY "+f_mm(XYpair[0])+","+f_mm(XYpair[1])+'\n')
+                                rt.EndTextColour()
                                 #print (msg)
                                 LogMsg+=msg+'\n'
                                 FailCN = FailCN+1
@@ -258,11 +423,32 @@ class annular_check( pcbnew.ActionPlugin ):
                         else:
                             PassCN = PassCN+1
                         
+            #if FailCV >0:
+            #writeTxt('\n')
             msg = "TH PADS that Pass = "+repr(PassC)+"; Fails = "+repr(FailC)
+            if FailC >0:
+                rt.BeginBold()
+            writeTxt("TH PADS that Pass = "+repr(PassC)+"; ")
+            if FailC >0:
+                rt.BeginTextColour('red')
+            writeTxt("Fails = "+repr(FailC)+'\n')
+            if FailC >0:
+                rt.EndTextColour()
+                rt.EndBold()
             print(msg)
             LogMsg+=msg+'\n'
             
             msg="NPTH PADS that Pass = "+repr(PassCN)+"; Fails = "+repr(FailCN)
+            #writeTxt('\n')
+            if FailCN >0:
+                rt.BeginBold()
+            writeTxt("NPTH PADS that Pass = "+repr(PassCN)+"; ")
+            if FailCN >0:
+                rt.BeginTextColour('red')
+            writeTxt("Fails = "+repr(FailCN)+'\n')
+            if FailC >0:
+                rt.EndTextColour()
+                rt.EndBold()
             print(msg)
             LogMsg+=msg+'\n'
             
@@ -274,7 +460,22 @@ class annular_check( pcbnew.ActionPlugin ):
             #subprocess.check_call([FC, kSU, pcbName])
             ##p = subprocess.Popen([FC, kSU, pcbName])
             
-            frame = displayDialog(None)
+            #found_violations=False
+            if (FailC+FailCN+FailCV)>0:
+                found_violations=True
+            
+            if found_violations:
+                frame.title = wx.StaticText(frame.panel, label=" Check result: (Violations found)")
+                #self.title.SetForegroundColour('#FF0000')
+                frame.title.SetBackgroundColour('#FF0000')
+                font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+                frame.title.SetFont(font)
+            else:
+                frame.title = wx.StaticText(frame.panel, label=" Annular Check result: OK")
+                frame.title.SetBackgroundColour('#00FF00')            
+                font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+                frame.title.SetFont(font)
+            ##frame = displayDialog(None)
             #frame = wx.Frame(None)
             frame.Center()
             frame.setMsg(LogMsg)
@@ -284,8 +485,19 @@ class annular_check( pcbnew.ActionPlugin ):
             #           style=wx.wxSTAY_ON_TOP)
             #frame.show()
         
-annular_check().register()
+# annular_check().register()
+if __name__ == "__main__":
+    import argparse
 
+    parser = argparse.ArgumentParser(
+            description='KiCad PCB Annular Checker')
+    parser.add_argument('file', type=str, help="KiCad PCB file")
+    args = parser.parse_args()
+    print("Loading %s" % args.file)
+    main(pcbnew.LoadBoard(args.file))
+
+else:
+    annular_check().register()
 
 
 # "b64_data" is a variable containing your base64 encoded jpeg
