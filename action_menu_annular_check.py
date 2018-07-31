@@ -16,9 +16,9 @@
 #  annular.py
 
 
-___version___="1.5.8"
+___version___="1.5.8x"
 
-global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations
+global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
 # (consider always drill +0.1)
@@ -41,7 +41,6 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 sys.path.append(os.path.dirname(__file__))
-
 
 
 class annular_check( pcbnew.ActionPlugin ):
@@ -142,6 +141,7 @@ class annular_check( pcbnew.ActionPlugin ):
                 # Tooltips
                 #self.m_cancel_btn.SetToolTip( wx.ToolTip(u"Cancel" ))
                 self.m_ok_btn.SetToolTip( wx.ToolTip(u"Confirm" ))
+                self.m_ok_btn.SetFocus()
                 self.m_staticText1.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
                 self.m_textAR_SET.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
                 self.m_textAR_SET_V.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
@@ -176,85 +176,162 @@ class annular_check( pcbnew.ActionPlugin ):
         #wx.MessageDialog(self.frame,"ciao")
         #subprocess.check_call(["C:\pathToYourProgram\yourProgram.exe", "your", "arguments", "comma", "separated"])
         #http://stackoverflow.com/questions/1811691/running-an-outside-program-executable-in-python
-        class displayDialog(wx.Dialog):
-            """
-            The default frame
-            http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
-            """
-            global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations
-            #----------------------------------------------------------------------
-            #def __init__(self):
-            #    """Constructor"""
-            #    wx.Frame.__init__(self, None, title="Display Frame", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)
-            #    panel = wx.Panel(self)
-            def __init__(self, parent):
-                wx.Dialog.__init__(self, parent, id=-1, title="Annular Checker")#
-                #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION) 
-                #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION)
-                #, pos=DefaultPosition, size=DefaultSize, style = wx.DEFAULT_FRAME_STYLE & (~wx.MAXIMIZE_BOX), name="fname")
-                #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
-                #
+        
+        ## class displayDialog(wx.Dialog):
+        ##     """
+        ##     The default frame
+        ##     http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
+        ##     """
+        ##     global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations
+        ##     #----------------------------------------------------------------------
+        ##     #def __init__(self):
+        ##     #    """Constructor"""
+        ##     #    wx.Frame.__init__(self, None, title="Display Frame", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)
+        ##     #    panel = wx.Panel(self)
+        ##     def __init__(self, parent):
+        ##         wx.Dialog.__init__(self, parent, id=-1, title="Annular Checker")#
+        ##         #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION) 
+        ##         #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION)
+        ##         #, pos=DefaultPosition, size=DefaultSize, style = wx.DEFAULT_FRAME_STYLE & (~wx.MAXIMIZE_BOX), name="fname")
+        ##         #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
+        ##         #
+        ##         
+        ##         self.SetIcon(PyEmbeddedImage(annular_ico_b64_data).GetIcon())
+        ##         #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
+        ##         self.panel = wx.Panel(self)     
+        ##         
+        ##         if found_violations:
+        ##             self.title = wx.StaticText(self.panel, label="")
+        ##             #self.title.SetForegroundColour('#FF0000')
+        ##             #self.title.SetBackgroundColour('#FF0000')
+        ##             #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+        ##             #self.title.SetFont(font)
+        ##         else:
+        ##             self.title = wx.StaticText(self.panel, label="")
+        ##             #self.title.SetBackgroundColour('#00FF00')
+        ##             #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+        ##             #self.title.SetFont(font)
+        ##         #self.result = wx.StaticText(self.panel, label="")
+        ##         #self.result.SetForegroundColour('#FF0000')
+        ##         #self.button = wx.Button(self.panel, label="Save")
+        ##         #self.lblname = wx.StaticText(self.panel, label="Your name:")
+        ##         #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
+        ##         ##self.editname = wx.TextCtrl(self.panel, size = (400, 400), style = wx.TE_MULTILINE|wx.TE_READONLY)
+        ##         self.m_richText1 = wx.richtext.RichTextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, size = (400, 400), style = 0|wx.VSCROLL|wx.HSCROLL|wx.WANTS_CHARS )#  wx.TE_MULTILINE|wx.TE_READONLY) #0|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
+        ##         #bSizer1.Add( self.m_richText1, 1, wx.EXPAND |wx.ALL, 5 )
+		## 
+        ## 
+        ##         # Set sizer for the frame, so we can change frame size to match widgets
+        ##         self.windowSizer = wx.BoxSizer()
+        ##         self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
+        ##         
+        ##         # Set sizer for the panel content
+        ##         self.sizer = wx.GridBagSizer(5, 0)
+        ##         self.sizer.Add(self.title, (0, 0))
+        ##         #self.sizer.Add(self.result, (1, 0))
+        ##         #self.sizer.Add(self.lblname, (1, 0))
+        ##         ## self.sizer.Add(self.editname, (1, 0))
+        ##         self.sizer.Add(self.m_richText1, (1, 0))
+        ##         #self.ok_btn = wx.Button( self, wx.ID_ANY, u"Copy errors", wx.DefaultPosition, wx.DefaultSize, 0 )
+        ##         #self.sizer.Add( self.ok_btn, 0, wx.ALL | wx.EXPAND)
+        ##         #self.sizer.Add(self.ok_btn, (2, 0)) #, wx.ALL | flag=wx.EXPAND)
+        ##         #self.sizer.Add( self.ok_btn, 0, wx.ALL, 5 )
+        ##         
+        ##         #self.sizer.Add(self.ok_btn, (2, 0), (1, 2), flag=wx.EXPAND)
+        ## 
+        ##         # Set simple sizer for a nice border
+        ##         self.border = wx.BoxSizer()
+        ##         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+        ##         
+        ##         #self.ok_btn = wx.Button( self, wx.ID_ANY, u"Copy errors", wx.DefaultPosition, wx.DefaultSize, 0 )
+        ##         #self.windowSizer.Add(self.ok_btn, 0, wx.ALL)
+        ##         #self.sizer.Add( self.ok_btn, (2,0))
+        ##         #self.sizer.Add( self.ok_btn, 0, wx.ALL, 5 )
+        ##         # Use the sizers
+        ##         self.panel.SetSizerAndFit(self.border)  
+        ##         self.SetSizerAndFit(self.windowSizer)  
+        ##         #self.result.SetLabel(msg)
+        ##         # Set event handlers
+        ##         #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
+        ##         #self.Show()
+        ##         #self.Bind(wx.EVT_CLOSE,self.OnClose)
+        ##     
+        ##     #def OnClose(self,e):
+        ##     #    #wx.LogMessage("c")
+        ##     #    e.Skip()
+        ##         #self.Close()
+        ###########################################################################
+        ## Class displayDialog
+        ###########################################################################
+        
+        class displayDialog ( wx.Dialog ):
+            
+            global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg
+        
+            def __init__( self, parent ):
+                wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Annular Checker", pos = wx.DefaultPosition, size = wx.Size( 450,521 ), style = wx.DEFAULT_DIALOG_STYLE )
                 
+                self.SetSizeHints( 300,100 )
                 self.SetIcon(PyEmbeddedImage(annular_ico_b64_data).GetIcon())
-                #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
-                self.panel = wx.Panel(self)     
                 
-                if found_violations:
-                    self.title = wx.StaticText(self.panel, label="")
-                    #self.title.SetForegroundColour('#FF0000')
-                    #self.title.SetBackgroundColour('#FF0000')
-                    #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                    #self.title.SetFont(font)
-                else:
-                    self.title = wx.StaticText(self.panel, label="")
-                    #self.title.SetBackgroundColour('#00FF00')
-                    #font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                    #self.title.SetFont(font)
-                #self.result = wx.StaticText(self.panel, label="")
-                #self.result.SetForegroundColour('#FF0000')
-                #self.button = wx.Button(self.panel, label="Save")
-                #self.lblname = wx.StaticText(self.panel, label="Your name:")
-                #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
-                ##self.editname = wx.TextCtrl(self.panel, size = (400, 400), style = wx.TE_MULTILINE|wx.TE_READONLY)
-                self.m_richText1 = wx.richtext.RichTextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, size = (400, 400), style = 0|wx.VSCROLL|wx.HSCROLL|wx.WANTS_CHARS )#  wx.TE_MULTILINE|wx.TE_READONLY) #0|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
-                #bSizer1.Add( self.m_richText1, 1, wx.EXPAND |wx.ALL, 5 )
-		
-        
-                # Set sizer for the frame, so we can change frame size to match widgets
-                self.windowSizer = wx.BoxSizer()
-                self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
+                bSizer1 = wx.BoxSizer( wx.VERTICAL )
                 
-                # Set sizer for the panel content
-                self.sizer = wx.GridBagSizer(5, 0)
-                self.sizer.Add(self.title, (0, 0))
-                #self.sizer.Add(self.result, (1, 0))
-                #self.sizer.Add(self.lblname, (1, 0))
-                ## self.sizer.Add(self.editname, (1, 0))
-                self.sizer.Add(self.m_richText1, (1, 0))
-                #self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
-        
-                # Set simple sizer for a nice border
-                self.border = wx.BoxSizer()
-                self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
-        
-                # Use the sizers
-                self.panel.SetSizerAndFit(self.border)  
-                self.SetSizerAndFit(self.windowSizer)  
-                #self.result.SetLabel(msg)
-                # Set event handlers
-                #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
-                #self.Show()
-                #self.Bind(wx.EVT_CLOSE,self.OnClose)
+                bSizer2 = wx.BoxSizer( wx.VERTICAL )
+                
+                self.m_staticTitle = wx.StaticText( self, wx.ID_ANY, u"", wx.DefaultPosition, wx.DefaultSize, 0 )
+                self.m_staticTitle.Wrap( -1 )
+                
+                bSizer2.Add( self.m_staticTitle, 0, wx.ALL, 5 )
+                
+                self.m_richText1 = wx.richtext.RichTextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
+                self.m_richText1.SetMinSize( wx.Size( 400,400 ) )
+                
+                bSizer2.Add( self.m_richText1, 1, wx.EXPAND |wx.ALL, 5 )
+                
+                gSizer3 = wx.GridSizer( 0, 2, 0, 0 )
+                
+                self.ok_btn = wx.Button( self, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer3.Add( self.ok_btn, 0, wx.ALL, 5 )
+                
+                self.copy_btn = wx.Button( self, wx.ID_ANY, u"Copy Text", wx.DefaultPosition, wx.DefaultSize, 0 )
+                gSizer3.Add( self.copy_btn, 0, wx.ALL, 5 )
+                
+                
+                bSizer2.Add( gSizer3, 1, wx.EXPAND, 5 )
+                
+                
+                bSizer1.Add( bSizer2, 1, wx.EXPAND, 5 )
+                
+                
+                self.SetSizer( bSizer1 )
+                self.Layout()
+                
+                self.Centre( wx.BOTH )
             
-            #def OnClose(self,e):
-            #    #wx.LogMessage("c")
-            #    e.Skip()
-                #self.Close()
-            
-            #def OnButton(self, e):
-            #    self.result.SetLabel(self.editname.GetValue())
-            def setMsg(self, t_msg):
+                #### ----- connections
+                # Connect Events
+                self.Bind(wx.EVT_BUTTON, self.OnClickOK, self.ok_btn)
+                self.Bind(wx.EVT_BUTTON, self.OnClickCopy, self.copy_btn)
+                self.ok_btn.SetFocus()
+                # Tooltips
+                self.copy_btn.SetToolTip( wx.ToolTip(u"Copy Text to Clipboard" ))
+                self.ok_btn.SetToolTip( wx.ToolTip(u"Exit" ))
+                
+            def __del__( self ):
                 pass
+	
+            def OnClickOK(self, event):  
+                self.Destroy()
+            
+            def OnClickCopy(self, event):  
+                self.m_richText1.SelectAll()
+                self.m_richText1.Copy()
+                #global LogMsg
+                #copy2clip(LogMsg)
+                self.copy_btn.SetLabel("Text Copied")
+                
+            #def setMsg(self, t_msg):
+            #    pass
                 #self.editname.SetValue(t_msg)
                 #self.m_richText1.BeginBold()
                 #self.m_richText1.WriteText(" You are in ")
@@ -345,7 +422,7 @@ class annular_check( pcbnew.ActionPlugin ):
             writeTxt("\nTesting PCB for Annular Rings\nTH Pads >= "+repr(AR_SET)+" Vias >= "+repr(AR_SET_V)+"\nPHD margin on PTH = "+ repr(DRL_EXTRA))
             rt.EndItalic()
             writeTxt('\n\n')
-            print (msg)
+            #print (msg)
             LogMsg+=msg+'\n\n'
             
             # print "LISTING VIAS:"
@@ -465,20 +542,22 @@ class annular_check( pcbnew.ActionPlugin ):
                 found_violations=True
             
             if found_violations:
-                frame.title = wx.StaticText(frame.panel, label=" Check result: (Violations found)")
+                #frame.m_staticTitle = wx.StaticText(frame, label=" Check result: (Violations found)")
+                frame.m_staticTitle.SetLabel(" Check result: (Violations found)")
                 #self.title.SetForegroundColour('#FF0000')
-                frame.title.SetBackgroundColour('#FF0000')
+                frame.m_staticTitle.SetBackgroundColour('#FF0000')
                 font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                frame.title.SetFont(font)
+                frame.m_staticTitle.SetFont(font)
             else:
-                frame.title = wx.StaticText(frame.panel, label=" Annular Check result: OK")
-                frame.title.SetBackgroundColour('#00FF00')            
+                #frame.m_staticTitle = wx.StaticText(frame, label=" Annular Check result: OK")
+                frame.m_staticTitle.SetLabel(" Annular Check result: OK")
+                frame.m_staticTitle.SetBackgroundColour('#00FF00')            
                 font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                frame.title.SetFont(font)
+                frame.m_staticTitle.SetFont(font)
             ##frame = displayDialog(None)
             #frame = wx.Frame(None)
             frame.Center()
-            frame.setMsg(LogMsg)
+            #frame.setMsg(LogMsg)
             frame.ShowModal()
             frame.Destroy()
             #frame = wx.wxFrame(None, 10110, 'T-Make', size=wx.wxSize(100,100),
