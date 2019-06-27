@@ -8,7 +8,7 @@
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.2"
+___version___="1.0.4"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -79,7 +79,9 @@ def generate_POS():
     content_top_VIRTUAL=''
     content_bot_VIRTUAL=''
     content_ALL=''
-            
+    SMD_pads = 0
+    TH_pads = 0
+        
     #to add relative position to 
     #print ("Board Aux Origin: " + str(my_board.GetAuxOrigin()))
     
@@ -93,8 +95,10 @@ def generate_POS():
         md=""
         if module.GetAttributes() == 0:   # PTH=0, SMD=1, Virtual = 2
             md = "THD"
+            TH_pads+=module.GetPadCount()
         elif module.GetAttributes() == 1:
             md = "SMD"
+            SMD_pads+=module.GetPadCount()
         else:
             md = "VIRTUAL"
         
@@ -188,6 +192,8 @@ def generate_POS():
         f_out.write(content)
     Header=Header_1+"## Side : ALL"+lsep+Header_2
     content=Header+content_ALL+"## End"+lsep
+    content = content + '## '+ str(SMD_pads) + ' SMD pads' +lsep
+    content = content + '## '+ str(TH_pads) + ' TH pads' +lsep
     with open(out_filename_ALL,'w') as f_out:
         f_out.write(content)
 
