@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.6"
+# release "1.0.7"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.6"
+___version___="1.0.7"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -49,12 +49,12 @@ def generate_POS():
     out_filename_ALL=path+os.sep+name+"_POS_All.txt"
     #out_filename=path+os.sep+name+"_POS.txt"
     LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
-    LogMsg1+="written to:" + lsep + out_filename_bot_SMD + lsep
-    LogMsg1+="written to:" + lsep + out_filename_top_THD + lsep
-    LogMsg1+="written to:" + lsep + out_filename_bot_THD + lsep
-    LogMsg1+="written to:" + lsep + out_filename_top_VIRTUAL + lsep
-    LogMsg1+="written to:" + lsep + out_filename_bot_VIRTUAL + lsep
-    LogMsg1+="written to:" + lsep + out_filename_ALL + lsep
+    LogMsg1+= out_filename_bot_SMD + lsep
+    LogMsg1+= out_filename_top_THD + lsep
+    LogMsg1+= out_filename_bot_THD + lsep
+    LogMsg1+= out_filename_top_VIRTUAL + lsep
+    LogMsg1+= out_filename_bot_VIRTUAL + lsep
+    LogMsg1+= out_filename_ALL + lsep
     # print (LogMsg)
     # 
     # print ("### Module positions - created on %s ###" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
@@ -346,9 +346,9 @@ class generatePOS( pcbnew.ActionPlugin ):
             wx.LogMessage("a board needs to be saved/loaded!")
         else:
             LogMsg=''
-            msg="'get_pos.py'"+os.linesep
-            msg+="version = "+___version___+os.linesep
-            msg+="Generate POS output"+os.linesep
+            # msg="'get_pos.py'"+os.linesep
+            msg="Generate POS output: version = "+___version___+os.linesep
+            #msg+="Generate POS output"+os.linesep
              #print (msg)
             #LogMsg=msg+'\n\n'
             
