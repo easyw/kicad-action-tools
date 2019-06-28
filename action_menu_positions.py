@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.4"
+# release "1.0.5"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.4"
+___version___="1.0.5"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -294,7 +294,8 @@ class generatePOS( pcbnew.ActionPlugin ):
             def OnClose(self,e):
                 #wx.LogMessage("c")
                 e.Skip()
-                self.Close()
+                #self.Close()
+                self.Destroy()
             
             #def OnButton(self, e):
             #    self.result.SetLabel(self.editname.GetValue())
