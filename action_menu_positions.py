@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.7"
+# release "1.0.8"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.7"
+___version___="1.0.8"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -26,6 +26,7 @@ execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scr
 
 def generate_POS():
     import os
+    mm_ius = 1000000.0
     
     my_board = pcbnew.GetBoard()
 
@@ -89,6 +90,9 @@ def generate_POS():
     Virt_top_cnt = 0
     Virt_bot_cnt = 0
     
+    bb = my_board.GetBoardEdgesBoundingBox()
+    pcb_height = bb.GetHeight() / mm_ius
+    pcb_width = bb.GetWidth() / mm_ius 
     #to add relative position to 
     #print ("Board Aux Origin: " + str(my_board.GetAuxOrigin()))
     
@@ -234,6 +238,7 @@ def generate_POS():
     LogMsg1+= str( SMD_bot_cnt) + ' Bot SMD modules' + lsep
     LogMsg1+= str( Virt_top_cnt) + ' Top Virtual modules' + lsep
     LogMsg1+= str( Virt_bot_cnt) + ' Bot Virtual modules' + lsep
+    LogMsg1+= '{0:.3f}'.format( pcb_height ) + 'mm Pcb Height, ' + '{0:.3f}'.format( pcb_width ) + 'mm Pcb Width [based on Edge bounding box]' +lsep
     
     return LogMsg1
     #return LogMsg1+LogMsg
