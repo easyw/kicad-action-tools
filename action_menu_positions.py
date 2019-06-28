@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.5"
+# release "1.0.6"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.5"
+___version___="1.0.6"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -81,7 +81,14 @@ def generate_POS():
     content_ALL=''
     SMD_pads = 0
     TH_pads = 0
-        
+    Virt_pads = 0
+    TH_top_cnt = 0
+    TH_bot_cnt = 0
+    SMD_top_cnt = 0
+    SMD_bot_cnt = 0
+    Virt_top_cnt = 0
+    Virt_bot_cnt = 0
+    
     #to add relative position to 
     #print ("Board Aux Origin: " + str(my_board.GetAuxOrigin()))
     
@@ -101,6 +108,7 @@ def generate_POS():
             SMD_pads+=module.GetPadCount()
         else:
             md = "VIRTUAL"
+            Virt_pads+=module.GetPadCount()
         
         #Reference=str(module.GetReference()).ljust(Nchars/2)
         #Value=str(module.GetValue()).ljust(Nchars)
@@ -141,16 +149,22 @@ def generate_POS():
         content+=Type+lsep
         if 'top' in Layer and 'SMD' in Type:
             content_top_SMD+=content
+            SMD_top_cnt+=1
         elif 'bot' in Layer and 'SMD' in Type:
             content_bot_SMD+=content
+            SMD_bot_cnt+=1
         elif 'top' in Layer and 'THD' in Type:
             content_top_THD+=content
+            TH_top_cnt+=1
         elif 'bot' in Layer and 'THD' in Type:
             content_bot_THD+=content
+            TH_bot_cnt+=1
         elif 'top' in Layer and 'VIRTUAL' in Type:
             content_top_VIRTUAL+=content
+            Virt_top_cnt+=1
         elif 'bot' in Layer and 'VIRTUAL' in Type:
             content_bot_VIRTUAL+=content
+            Virt_bot_cnt+=1
         content_ALL+=content
         #print ("%s %s %s %1.4f %1.4f %1.4f %s %s" % ( str(module.GetReference()).ljust(Nchars), 
         #                            str(module.GetValue()).ljust(Nchars),
@@ -194,6 +208,14 @@ def generate_POS():
     content=Header+content_ALL+"## End"+lsep
     content = content + '## '+ str(SMD_pads) + ' SMD pads' +lsep
     content = content + '## '+ str(TH_pads) + ' TH pads' +lsep
+    content = content + '## '+ str(Virt_pads) + ' Virtual pads' +lsep
+    content = content + '## '+ str( TH_top_cnt) + ' Top TH modules' + lsep
+    content = content + '## '+ str( TH_bot_cnt) + ' Bot TH modules' + lsep
+    content = content + '## '+ str( SMD_top_cnt) + ' Top SMD modules' + lsep
+    content = content + '## '+ str( SMD_bot_cnt) + ' Bot SMD modules' + lsep
+    content = content + '## '+ str( Virt_top_cnt) + ' Top Virtual modules' + lsep
+    content = content + '## '+ str( Virt_bot_cnt) + ' Bot Virtual modules' + lsep
+    
     with open(out_filename_ALL,'w') as f_out:
         f_out.write(content)
 
@@ -203,6 +225,15 @@ def generate_POS():
     #f = open(out_filename,'w')
     #f.write(LogMsg)
     #f.close()
+    LogMsg1+= lsep + str(SMD_pads) + ' SMD pads' +lsep
+    LogMsg1+= str(TH_pads) + ' TH pads' +lsep
+    LogMsg1+= str(Virt_pads) + ' Virtual pads' +lsep
+    LogMsg1+= str( TH_top_cnt) + ' Top TH modules' + lsep
+    LogMsg1+= str( TH_bot_cnt) + ' Bot TH modules' + lsep
+    LogMsg1+= str( SMD_top_cnt) + ' Top SMD modules' + lsep
+    LogMsg1+= str( SMD_bot_cnt) + ' Bot SMD modules' + lsep
+    LogMsg1+= str( Virt_top_cnt) + ' Top Virtual modules' + lsep
+    LogMsg1+= str( Virt_bot_cnt) + ' Bot Virtual modules' + lsep
     
     return LogMsg1
     #return LogMsg1+LogMsg
