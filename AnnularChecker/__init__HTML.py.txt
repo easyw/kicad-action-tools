@@ -1,0 +1,2 @@
+from .annular_checker_html import annular_check
+annular_check().register()

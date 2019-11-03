@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.8"
+# release "1.0.9"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.0.8"
+___version___="1.2.0"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -262,9 +262,12 @@ class generatePOS( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Generate POS output"
+        self.name = "Generate Fabrication POS output\nversion "+___version___
         self.category = "Fabrication Output"
         self.description = "Generate POS output for SMD, THD, Virtual"
+        #self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
+        self.icon_file_name = os.path.join(os.path.dirname(__file__), "./fabricationPositions.png")
+        self.show_toolbar_button = True
 
     def Run( self ):
         
@@ -290,7 +293,7 @@ class generatePOS( pcbnew.ActionPlugin ):
                 #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
                 #
                 
-                self.SetIcon(PyEmbeddedImage(round_ico_b64_data).GetIcon())
+                self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
                 #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
                 self.panel = wx.Panel(self)     
                 self.title = wx.StaticText(self.panel, label="Generate POS debug:")
@@ -375,7 +378,7 @@ class generatePOS( pcbnew.ActionPlugin ):
 generatePOS().register()
 
 # "b64_data" is a variable containing your base64 encoded jpeg
-round_ico_b64_data =\
+getPos_ico_b64_data =\
 """
 iVBORw0KGgoAAAANSUhEUgAAAEAAAAA/CAYAAABQHc7KAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAdDwAAHQ8Bjlx1kwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3Nj
 YXBlLm9yZ5vuPBoAAAw+SURBVGiB7Zt7cFTVHcc/d+9uSAIhklgIpiQ0tjxSkCKIQ1CpCO3wUKCW0cF0Bqf/VFTG6tROS/8QZuxYwZGHgqD4SjNToFFDjJjGB4LkyUPk

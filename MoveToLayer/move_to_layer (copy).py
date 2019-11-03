@@ -24,7 +24,8 @@ import pcbnew
 from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
-___version___="1.1.3"
+import os
+___version___="1.2.0"
 
 
 class move_to_draw_layer( pcbnew.ActionPlugin ):
@@ -46,9 +47,12 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Move Selected drawings to chosen Layer"
-        self.category = "Modify Drawing PCB"
+        import os
+        self.name = "Move Selected drawings to chosen Layer\nversion "+___version___
+        self.category = "Modify PCB"
         self.description = "Move Selected drawings to chosen Layer on an existing PCB"
+        self.icon_file_name = os.path.join(os.path.dirname(__file__), "./move2layer.png")
+        self.show_toolbar_button = True
 
     def Run( self ):
         found_selected=False
@@ -69,8 +73,6 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 'B_Fab'    : pcbnew.B_Fab,
                 'F_SilkS'    : pcbnew.F_SilkS,
                 'B_SilkS'    : pcbnew.B_SilkS,
-                'F_Mask'    : pcbnew.F_Mask,
-                'B_Mask'    : pcbnew.B_Mask,
             }[x]
         
         class displayDialog(wx.Dialog):
@@ -98,8 +100,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 
                 self.ct = 0
                 self.layerSelection = "Edge_Cuts"
-                layerList = ["Edge_Cuts", "Eco1_User", "Eco2_User", "Dwgs_User", "Cmts_User",\
-                             "Margin", "F_CrtYd", "B_CrtYd", "F_Fab", "B_Fab", "F_SilkS", "B_SilkS", "F_Mask", "B_Mask"]
+                layerList = ["Edge_Cuts", "Eco1_User", "Eco2_User", "Dwgs_User", "Cmts_User", "Margin", "F_CrtYd", "B_CrtYd", "F_Fab", "B_Fab", "F_SilkS", "B_SilkS"]
                 self.combo = wx.ComboBox(self.panel, choices=layerList)
                 self.combo.SetSelection(0)
                 
@@ -145,7 +146,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             def OnClose(self,e):
                 #wx.LogMessage("c")
                 e.Skip()
-                self.Destroy() #Close()
+                self.Close()
                 #self.result.SetLabel(msg)
                 # Set event handlers
                 #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
@@ -175,37 +176,45 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             LogMsg=''
             msg="'move to layer tool'\n"
             msg+="version = "+___version___
-        frame = displayDialog(None)
-        #frame = wx.Frame(None)
-        frame.Center()
-        #frame.setMsg(LogMsg)
-        frame.ShowModal()
-        frame.Destroy()
+            frame = displayDialog(None)
+            #frame = wx.Frame(None)
+            frame.Center()
+            #frame.setMsg(LogMsg)
+            frame.ShowModal()
+            #dlg.Destroy()
+            frame.Destroy()
         
-        #dlg=wx.MessageBox( 'Changing Layer for Selected?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION )
-        dlg=wx.MessageBox( 'Changing Layer for Selected '+frame.layerSelection+ '?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING )
-        if dlg == wx.YES:
-            #wx.LogMessage("YES")
-            #wx.LogMessage(str(board.IsModified()))
-            #board.SetModified()
-            #wx.LogMessage(str(board.IsModified()))
-            for drw in board.GetDrawings():
-                if drw.IsSelected():
-                    drw.SetLayer(switch(frame.layerSelection))
-                    found_selected=True
-    
-            if found_selected!=True:
-                LogMsg="select lines to be moved to new layer\n"
-                LogMsg+="use GAL for selecting lines"
-                wx.LogMessage(LogMsg)
-            else:
-                pcbnew.Refresh()
-                LogMsg="selected drawings moved to "+frame.layerSelection+" layer"
-                wx.LogMessage(LogMsg)
+            #dlg=wx.MessageBox( 'Changing Layer for Selected?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION )
+            dlg=wx.MessageBox( 'Changing Layer for Selected '+frame.layerSelection+ '?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING )
+            if dlg == wx.YES:
+                #wx.LogMessage("YES")
+                #wx.LogMessage(str(board.IsModified()))
+                #board.SetModified()
+                #wx.LogMessage(str(board.IsModified()))
+                #try:
+                #    board_drawings=board.GetDrawings()
+                #except:
+                #    board_drawings=board.DrawingsList()
+                #
+                #for drw in board_drawings:
+                for drw in board.GetDrawings():
+                    if drw.IsSelected():
+                        drw.SetLayer(switch(frame.layerSelection))
+                        found_selected=True
+        
+                if found_selected!=True:
+                    LogMsg="select lines to be moved to new layer\n"
+                    LogMsg+="use GAL for selecting lines"
+                    wx.LogMessage(LogMsg)
+                else:
+                    pcbnew.Refresh()
+                    LogMsg="selected drawings moved to "+frame.layerSelection+" layer"
+                    wx.LogMessage(LogMsg)
+                
         
 
 
-move_to_draw_layer().register()
+#move_to_draw_layer().register()
 
 
 # "b64_data" is a variable containing your base64 encoded jpeg
