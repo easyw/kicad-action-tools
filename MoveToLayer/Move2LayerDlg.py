@@ -17,7 +17,7 @@ import wx.xrc
 class Move2LayerDlg ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Move to Layer", pos = wx.DefaultPosition, size = wx.Size( 390,180 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Move to Layer", pos = wx.DefaultPosition, size = wx.Size( 325,180 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -36,8 +36,8 @@ class Move2LayerDlg ( wx.Dialog ):
 		bSizer31.Add( self.m_staticTextLayer, 1, wx.ALL|wx.EXPAND, 5 )
 
 		m_comboBoxLayerChoices = []
-		self.m_comboBoxLayer = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.DefaultSize, m_comboBoxLayerChoices, 0 )
-		bSizer31.Add( self.m_comboBoxLayer, 0, wx.ALL, 5 )
+		self.m_comboBoxLayer = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.Size( 250,-1 ), m_comboBoxLayerChoices, 0 )
+		bSizer31.Add( self.m_comboBoxLayer, 0, wx.ALL|wx.EXPAND, 5 )
 
 
 		bSizer3.Add( bSizer31, 0, 0, 5 )

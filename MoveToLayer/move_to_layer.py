@@ -203,6 +203,17 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
         board = pcbnew.GetBoard()
         #wx.MessageDialog(None, 'This is a message box.', 'Test', wx.OK | wx.ICON_INFORMATION).ShowModal()
         fileName = GetBoard().GetFileName()
+        # # dicts for converting layer name to id, used by _get_layer
+        # _std_layer_dict = {pcbnew.BOARD_GetStandardLayerName(n): n
+        #                 for n in range(pcbnew.PCB_LAYER_ID_COUNT)}
+        # #_std_layer_names = {s: n for n, s in _std_layer_dict.iteritems()}
+        # _std_layer_names = {s: n for n, s in _std_layer_dict.items()}
+        # _brd_layer_dict = {pcbnew.GetBoard().GetLayerName(n): n
+        #            for n in range(pcbnew.PCB_LAYER_ID_COUNT)}
+        # #_std_layer_names = {s: n for n, s in _std_layer_dict.iteritems()}
+        # _brd_layer_names = {s: n for n, s in _brd_layer_dict.items()}
+        
+        
         if 0: #len(fileName) == 0:
             wx.LogMessage("A board needs to be saved/loaded\nto run the plugin!")
         else:
@@ -211,9 +222,16 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
             aParameters = Move2Layer_Dlg(_pcbnew_frame)
             aParameters.Show()
+            for l in range(pcbnew.PCB_LAYER_ID_COUNT):
+                aParameters.m_comboBoxLayer.Append(pcbnew.GetBoard().GetLayerName(l))
+            aParameters.m_comboBoxLayer.Select(44)
             modal_result = aParameters.ShowModal()
             if modal_result == wx.ID_OK:
-                MoveToLayer(pcb, Layer)
+                LayerName = aParameters.m_comboBoxLayer.GetStringSelection()
+                idx = aParameters.m_comboBoxLayer.FindString(LayerName)
+                LayerStdName = pcbnew.BOARD_GetStandardLayerName(idx)
+                wx.LogMessage(LayerName+';'+str(idx)+';'+LayerStdName)
+                #MoveToLayer(pcb, Layer)
             else:
                 None  # Cancel
 

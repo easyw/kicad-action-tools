@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">Move2LayerDlg</property>
             <property name="pos"></property>
-            <property name="size">390,180</property>
+            <property name="size">325,180</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Move to Layer</property>
@@ -191,7 +191,7 @@
                         </object>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
-                            <property name="flag">wxALL</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">0</property>
                             <object class="wxComboBox" expanded="1">
                                 <property name="BottomDockable">1</property>
@@ -225,9 +225,9 @@
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
-                                <property name="min_size"></property>
+                                <property name="min_size">-1,-1</property>
                                 <property name="minimize_button">0</property>
-                                <property name="minimum_size"></property>
+                                <property name="minimum_size">-1,-1</property>
                                 <property name="moveable">1</property>
                                 <property name="name">m_comboBoxLayer</property>
                                 <property name="pane_border">1</property>
@@ -239,7 +239,7 @@
                                 <property name="resize">Resizable</property>
                                 <property name="selection">-1</property>
                                 <property name="show">1</property>
-                                <property name="size"></property>
+                                <property name="size">250,-1</property>
                                 <property name="style"></property>
                                 <property name="subclass">; ; forward_declare</property>
                                 <property name="toolbar_pane">0</property>
