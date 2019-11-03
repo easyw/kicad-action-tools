@@ -24,7 +24,7 @@ import pcbnew
 from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
-___version___="1.1.2"
+___version___="1.1.3"
 
 
 class move_to_draw_layer( pcbnew.ActionPlugin ):
@@ -69,6 +69,8 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 'B_Fab'    : pcbnew.B_Fab,
                 'F_SilkS'    : pcbnew.F_SilkS,
                 'B_SilkS'    : pcbnew.B_SilkS,
+                'F_Mask'    : pcbnew.F_Mask,
+                'B_Mask'    : pcbnew.B_Mask,
             }[x]
         
         class displayDialog(wx.Dialog):
@@ -96,7 +98,8 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
                 
                 self.ct = 0
                 self.layerSelection = "Edge_Cuts"
-                layerList = ["Edge_Cuts", "Eco1_User", "Eco2_User", "Dwgs_User", "Cmts_User", "Margin", "F_CrtYd", "B_CrtYd", "F_Fab", "B_Fab", "F_SilkS", "B_SilkS"]
+                layerList = ["Edge_Cuts", "Eco1_User", "Eco2_User", "Dwgs_User", "Cmts_User",\
+                             "Margin", "F_CrtYd", "B_CrtYd", "F_Fab", "B_Fab", "F_SilkS", "B_SilkS", "F_Mask", "B_Mask"]
                 self.combo = wx.ComboBox(self.panel, choices=layerList)
                 self.combo.SetSelection(0)
                 
@@ -142,7 +145,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             def OnClose(self,e):
                 #wx.LogMessage("c")
                 e.Skip()
-                self.Close()
+                self.Destroy() #Close()
                 #self.result.SetLabel(msg)
                 # Set event handlers
                 #self.button.Bind(wx.EVT_BUTTON, self.OnButton)
