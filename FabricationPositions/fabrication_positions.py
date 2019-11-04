@@ -2,13 +2,13 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.0.9"
+# release "1.1.1"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.2.0"
+___version___="1.2.1"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -40,7 +40,7 @@ def generate_POS():
     #lsep=os.linesep
     lsep='\n'
     
-    LogMsg1=lsep+"reading from:" + lsep + dirpath + lsep + lsep
+    #LogMsg1=lsep+"reading from:" + lsep + dirpath + lsep + lsep
     out_filename_top_SMD=path+os.sep+name+"_POS_top_SMD.txt"
     out_filename_bot_SMD=path+os.sep+name+"_POS_bot_SMD.txt"
     out_filename_top_THD=path+os.sep+name+"_POS_top_THD.txt"
@@ -49,13 +49,13 @@ def generate_POS():
     out_filename_bot_VIRTUAL=path+os.sep+name+"_POS_bot_Virtual.txt"
     out_filename_ALL=path+os.sep+name+"_POS_All.txt"
     #out_filename=path+os.sep+name+"_POS.txt"
-    LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
-    LogMsg1+= out_filename_bot_SMD + lsep
-    LogMsg1+= out_filename_top_THD + lsep
-    LogMsg1+= out_filename_bot_THD + lsep
-    LogMsg1+= out_filename_top_VIRTUAL + lsep
-    LogMsg1+= out_filename_bot_VIRTUAL + lsep
-    LogMsg1+= out_filename_ALL + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_bot_SMD + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_top_THD + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_bot_THD + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_top_VIRTUAL + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_bot_VIRTUAL + lsep
+    #LogMsg1+="written to:" + lsep + out_filename_ALL + lsep
     # print (LogMsg)
     # 
     # print ("### Module positions - created on %s ###" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
@@ -65,7 +65,7 @@ def generate_POS():
     # print ("# Ref     Val        Package       PosX       PosY       Rot  Side    Type")
 
     Header_1="### Module positions - created on " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+lsep
-    Header_1+="### Printed by get_pos v1"+lsep
+    Header_1+="### Printed by pcb_positions plugin"+lsep
     Header_1+="## Unit = mm, Angle = deg."+lsep
     #LogMsg+="## Side : All"+lsep
     Header_2="## Board Aux Origin: " + str(my_board.GetAuxOrigin())+lsep
@@ -97,6 +97,13 @@ def generate_POS():
     #print ("Board Aux Origin: " + str(my_board.GetAuxOrigin()))
     
     #'{0:<10} {1:<10} {2:<10}'.format(1.0, 2.2, 4.4))
+    
+    tracks = my_board.GetTracks()
+    vias = []
+    for via in tracks:
+        if type(via) is pcbnew.VIA:
+            vias.append(via)
+    vias_cnt = len(vias)
     
     for module in my_board.GetModules(): 
         #print ("%s \"%s\" %s %1.3f %1.3f %1.3f %s" % ( module.GetReference(), 
@@ -229,16 +236,31 @@ def generate_POS():
     #f = open(out_filename,'w')
     #f.write(LogMsg)
     #f.close()
-    LogMsg1+= lsep + str(SMD_pads) + ' SMD pads' +lsep
-    LogMsg1+= str(TH_pads) + ' TH pads' +lsep
-    LogMsg1+= str(Virt_pads) + ' Virtual pads' +lsep
-    LogMsg1+= str( TH_top_cnt) + ' Top TH modules' + lsep
-    LogMsg1+= str( TH_bot_cnt) + ' Bot TH modules' + lsep
-    LogMsg1+= str( SMD_top_cnt) + ' Top SMD modules' + lsep
-    LogMsg1+= str( SMD_bot_cnt) + ' Bot SMD modules' + lsep
-    LogMsg1+= str( Virt_top_cnt) + ' Top Virtual modules' + lsep
-    LogMsg1+= str( Virt_bot_cnt) + ' Bot Virtual modules' + lsep
-    LogMsg1+= '{0:.3f}'.format( pcb_height ) + 'mm Pcb Height, ' + '{0:.3f}'.format( pcb_width ) + 'mm Pcb Width [based on Edge bounding box]' +lsep
+    LogMsg1="reading from:" + lsep + dirpath + lsep
+    LogMsg1+= lsep + 'Pads:' + lsep
+    LogMsg1+= 'SMD pads ' + str(SMD_pads) + lsep
+    LogMsg1+= 'TH pads ' + str(TH_pads) +lsep
+    LogMsg1+= 'Virtual pads ' + str(Virt_pads) + lsep
+    LogMsg1+= 'Vias ' + str( vias_cnt) + lsep
+    LogMsg1+= lsep + 'Modules:' + lsep
+    LogMsg1+= 'Top TH modules ' + str( TH_top_cnt) + lsep
+    LogMsg1+= 'Bot TH modules ' + str( TH_bot_cnt) + lsep
+    LogMsg1+= 'Top SMD modules ' + str( SMD_top_cnt) + lsep
+    LogMsg1+= 'Bot SMD modules ' + str( SMD_bot_cnt) + lsep
+    LogMsg1+= 'Top Virtual modules ' + str( Virt_top_cnt) + lsep
+    LogMsg1+= 'Bot Virtual modules ' + str( Virt_bot_cnt) + lsep
+    LogMsg1+= lsep + 'PCB Geometry:' + lsep
+    LogMsg1+= 'Pcb Height ' +'{0:.3f}'.format( pcb_height ) + 'mm, Pcb Width ' + '{0:.3f}'.format( pcb_width ) + 'mm' +lsep+'[based on Edge bounding box]' +lsep
+    LogMsg1+= lsep
+    #LogMsg1+=lsep+"reading from:" + lsep + dirpath + lsep + lsep
+    LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
+    LogMsg1+=out_filename_bot_SMD + lsep
+    LogMsg1+=out_filename_top_THD + lsep
+    LogMsg1+=out_filename_bot_THD + lsep
+    LogMsg1+=out_filename_top_VIRTUAL + lsep
+    LogMsg1+=out_filename_bot_VIRTUAL + lsep
+    LogMsg1+=out_filename_ALL + lsep
+    
     
     return LogMsg1
     #return LogMsg1+LogMsg
@@ -264,11 +286,11 @@ class generatePOS( pcbnew.ActionPlugin ):
         """
         self.name = "Generate Fabrication POS output\nversion "+___version___
         self.category = "Fabrication Output"
-        self.description = "Generate POS output for SMD, THD, Virtual"
+        self.description = "Generate POS output for SMD, THD, Virtual\nand Board Statistics"
         #self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
         self.icon_file_name = os.path.join(os.path.dirname(__file__), "./fabricationPositions.png")
         self.show_toolbar_button = True
-
+        
     def Run( self ):
         
         #wx.MessageDialog(self.frame,"ciao")
@@ -375,7 +397,7 @@ class generatePOS( pcbnew.ActionPlugin ):
             #           style=wx.wxSTAY_ON_TOP)
             #frame.show()
             
-generatePOS().register()
+#generatePOS().register()
 
 # "b64_data" is a variable containing your base64 encoded jpeg
 getPos_ico_b64_data =\
