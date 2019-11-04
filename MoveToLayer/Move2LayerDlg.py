@@ -17,13 +17,13 @@ import wx.xrc
 class Move2LayerDlg ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Move to Layer", pos = wx.DefaultPosition, size = wx.Size( 325,180 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Move to Layer", pos = wx.DefaultPosition, size = wx.Size( 325,190 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_comment = wx.StaticText( self, wx.ID_ANY, u"Select Objects to Move to Layer\n", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_comment = wx.StaticText( self, wx.ID_ANY, u"Selected Objects to Move to chosen Layer", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_comment.Wrap( -1 )
 
 		bSizer3.Add( self.m_comment, 0, wx.ALL|wx.EXPAND, 5 )

@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">Move2LayerDlg</property>
             <property name="pos"></property>
-            <property name="size">325,180</property>
+            <property name="size">325,190</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Move to Layer</property>
@@ -90,7 +90,7 @@
                         <property name="gripper">0</property>
                         <property name="hidden">0</property>
                         <property name="id">wxID_ANY</property>
-                        <property name="label">Select Objects to Move to Layer&#x0A;</property>
+                        <property name="label">Selected Objects will Move to chosen Layer</property>
                         <property name="markup">0</property>
                         <property name="max_size"></property>
                         <property name="maximize_button">0</property>
