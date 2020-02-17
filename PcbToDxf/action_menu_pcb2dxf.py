@@ -230,6 +230,8 @@ class pcb2dxf( pcbnew.ActionPlugin ):
         self.name = "export technical layers of pcb to DXF (saved board)"
         self.category = "export PCB"
         self.description = "export technical layers of pcb to DXF (saved board)"
+        self.show_toolbar_button = True
+        self.icon_file_name = os.path.join(os.path.dirname(__file__), './dxf_icon.png')
 
     def Run( self ):
         fileName = GetBoard().GetFileName()
