@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">Move2LayerDlg</property>
             <property name="pos"></property>
-            <property name="size">568,263</property>
+            <property name="size">325,190</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Move to Layer</property>
@@ -528,17 +528,6 @@
                                 <property name="window_style"></property>
                             </object>
                         </object>
-                    </object>
-                </object>
-                <object class="sizeritem" expanded="1">
-                    <property name="border">5</property>
-                    <property name="flag">wxEXPAND</property>
-                    <property name="proportion">1</property>
-                    <object class="wxBoxSizer" expanded="1">
-                        <property name="minimum_size"></property>
-                        <property name="name">bSizer4</property>
-                        <property name="orient">wxVERTICAL</property>
-                        <property name="permission">none</property>
                     </object>
                 </object>
             </object>
