@@ -25,19 +25,20 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
-___version___="1.2.2"
+___version___="1.2.3"
 
 from . import Move2LayerDlg
 
 
 def MoveToLayer(pcb,layerId):
+    found_selected=False
     for drw in pcb.GetDrawings():
         if drw.IsSelected():
             drw.SetLayer(layerId)
             found_selected=True
     
     if found_selected!=True:
-        LogMsg="select lines to be moved to new layer\n"
+        LogMsg="select drawings to be moved to new layer\n"
         LogMsg+="use GAL for selecting lines"
         wx.LogMessage(LogMsg)
     else:
@@ -101,7 +102,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
           of the plugin
         """
         import os
-        self.name = "Move Selected Drawings to chosen Layer\nversion "+___version___
+        self.name = "Move Selected Drawings to chosen Layer \nversion "+___version___
         self.category = "Modify PCB"
         self.description = "Move Selected Drawings to chosen Layer on an existing PCB"
         self.icon_file_name = os.path.join(os.path.dirname(__file__), "./move2layer.png")

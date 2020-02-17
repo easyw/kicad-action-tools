@@ -19,6 +19,11 @@
 #
 #
 
+### plugins errors
+#import pcbnew
+#pcbnew.GetWizardsBackTrace()
+
+
 import wx
 import pcbnew
 from pcbnew import *

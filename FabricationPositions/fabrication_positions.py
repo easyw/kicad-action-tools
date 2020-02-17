@@ -8,7 +8,12 @@
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
 #
 
-___version___="1.2.1"
+### plugins errors
+#import pcbnew
+#pcbnew.GetWizardsBackTrace()
+
+
+___version___="1.2.2"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -24,7 +29,7 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scripting/plugins/getpos.py")
 """
 
-def generate_POS():
+def generate_POS(dir):
     import os
     mm_ius = 1000000.0
     
@@ -36,18 +41,27 @@ def generate_POS():
     path, fname = os.path.split(dirpath)
     ext = os.path.splitext(os.path.basename(fileName))[1]
     name = os.path.splitext(os.path.basename(fileName))[0]
-    
+    #wx.LogMessage(dir)
     #lsep=os.linesep
     lsep='\n'
     
+    if len(dir)>0:
+        dir = dir.rstrip('\\').rstrip('/')
+        if not os.path.exists(path+os.sep+dir):
+            #create dir
+            os.mkdir(path+os.sep+dir)
+        dir = dir+os.sep
+        #wx.LogMessage(dir)
+    else:
+        dir = dir+os.sep
     #LogMsg1=lsep+"reading from:" + lsep + dirpath + lsep + lsep
-    out_filename_top_SMD=path+os.sep+name+"_POS_top_SMD.txt"
-    out_filename_bot_SMD=path+os.sep+name+"_POS_bot_SMD.txt"
-    out_filename_top_THD=path+os.sep+name+"_POS_top_THD.txt"
-    out_filename_bot_THD=path+os.sep+name+"_POS_bot_THD.txt"
-    out_filename_top_VIRTUAL=path+os.sep+name+"_POS_top_Virtual.txt"
-    out_filename_bot_VIRTUAL=path+os.sep+name+"_POS_bot_Virtual.txt"
-    out_filename_ALL=path+os.sep+name+"_POS_All.txt"
+    out_filename_top_SMD=path+os.sep+dir+name+"_POS_top_SMD.txt"
+    out_filename_bot_SMD=path+os.sep+dir+name+"_POS_bot_SMD.txt"
+    out_filename_top_THD=path+os.sep+dir+name+"_POS_top_THD.txt"
+    out_filename_bot_THD=path+os.sep+dir+name+"_POS_bot_THD.txt"
+    out_filename_top_VIRTUAL=path+os.sep+dir+name+"_POS_top_Virtual.txt"
+    out_filename_bot_VIRTUAL=path+os.sep+dir+name+"_POS_bot_Virtual.txt"
+    out_filename_ALL=path+os.sep+dir+name+"_POS_All.txt"
     #out_filename=path+os.sep+name+"_POS.txt"
     #LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
     #LogMsg1+="written to:" + lsep + out_filename_bot_SMD + lsep
@@ -253,19 +267,54 @@ def generate_POS():
     LogMsg1+= 'Pcb Height ' +'{0:.3f}'.format( pcb_height ) + 'mm, Pcb Width ' + '{0:.3f}'.format( pcb_width ) + 'mm' +lsep+'[based on Edge bounding box]' +lsep
     LogMsg1+= lsep
     #LogMsg1+=lsep+"reading from:" + lsep + dirpath + lsep + lsep
-    LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
-    LogMsg1+=out_filename_bot_SMD + lsep
-    LogMsg1+=out_filename_top_THD + lsep
-    LogMsg1+=out_filename_bot_THD + lsep
-    LogMsg1+=out_filename_top_VIRTUAL + lsep
-    LogMsg1+=out_filename_bot_VIRTUAL + lsep
-    LogMsg1+=out_filename_ALL + lsep
-    
+    if 0:
+        LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
+        LogMsg1+=out_filename_bot_SMD + lsep
+        LogMsg1+=out_filename_top_THD + lsep
+        LogMsg1+=out_filename_bot_THD + lsep
+        LogMsg1+=out_filename_top_VIRTUAL + lsep
+        LogMsg1+=out_filename_bot_VIRTUAL + lsep
+        LogMsg1+=out_filename_ALL + lsep
+    else:
+        LogMsg1+="written to:" + lsep + path+os.sep+dir + lsep
     
     return LogMsg1
     #return LogMsg1+LogMsg
 
 
+# Python plugin stuff
+from . import PositionsDlg
+
+class Positions_Dlg(PositionsDlg.PositionsDlg):
+    # from https://github.com/MitjaNemec/Kicad_action_plugins
+    # hack for new wxFormBuilder generating code incompatible with old wxPython
+    # noinspection PyMethodOverriding
+    def SetSizeHints(self, sz1, sz2):
+        if wx.__version__ < '4.0':
+            self.SetSizeHintsSz(sz1, sz2)
+        else:
+            super(Positions_Dlg, self).SetSizeHints(sz1, sz2)
+
+    #def onApplyClick(self, event):
+    #    return self.EndModal(wx.ID_OK)
+    #
+    #def onCancelClick(self, event):
+    #    return self.EndModal(wx.ID_CANCEL)
+
+    def __init__(self,  parent):
+        import wx
+        PositionsDlg.PositionsDlg.__init__(self, parent)
+        #self.GetSizer().Fit(self)
+        self.SetMinSize(self.GetSize())
+        # self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
+        # self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
+        # if wx.__version__ < '4.0':
+        #     self.m_buttonReconnect.SetToolTipString( u"Select two converging Tracks to re-connect them\nor Select tracks including one round corner to be straighten" )
+        #     self.m_buttonRound.SetToolTipString( u"Select two connected Tracks to round the corner\nThen choose distance from intersection and the number of segments" )
+        # else:
+        #     self.m_buttonReconnect.SetToolTip( u"Select two converging Tracks to re-connect them\nor Select tracks including one round corner to be straighten" )
+        #     self.m_buttonRound.SetToolTip( u"Select two connected Tracks to round the corner\nThen choose distance from intersection and the number of segments" )
+#
 
 
 class generatePOS( pcbnew.ActionPlugin ):
@@ -296,97 +345,114 @@ class generatePOS( pcbnew.ActionPlugin ):
         #wx.MessageDialog(self.frame,"ciao")
         #subprocess.check_call(["C:\pathToYourProgram\yourProgram.exe", "your", "arguments", "comma", "separated"])
         #http://stackoverflow.com/questions/1811691/running-an-outside-program-executable-in-python
-        class displayDialog(wx.Dialog):
-            """
-            The default frame
-            http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
-            """
-        
-            #----------------------------------------------------------------------
-            #def __init__(self):
-            #    """Constructor"""
-            #    wx.Frame.__init__(self, None, title="Display Frame", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)
-            #    panel = wx.Panel(self)
-            def __init__(self, parent):
-                wx.Dialog.__init__(self, parent, id=-1, title="Generate POS output")#
-                #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION) 
-                #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION)
-                #, pos=DefaultPosition, size=DefaultSize, style = wx.DEFAULT_FRAME_STYLE & (~wx.MAXIMIZE_BOX), name="fname")
-                #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
-                #
-                
-                self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
-                #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
-                self.panel = wx.Panel(self)     
-                self.title = wx.StaticText(self.panel, label="Generate POS debug:")
-                #self.result = wx.StaticText(self.panel, label="")
-                #self.result.SetForegroundColour('#FF0000')
-                self.button = wx.Button(self.panel, label="Close")
-                #self.lblname = wx.StaticText(self.panel, label="Your name:")
-                #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
-                self.editname = wx.TextCtrl(self.panel, size = (600, 500), style = wx.TE_MULTILINE|wx.TE_READONLY)
-        
-        
-                # Set sizer for the frame, so we can change frame size to match widgets
-                self.windowSizer = wx.BoxSizer()
-                self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
-        
-                # Set sizer for the panel content
-                self.sizer = wx.GridBagSizer(5, 0)
-                self.sizer.Add(self.title, (0, 0))
-                #self.sizer.Add(self.result, (1, 0))
-                #self.sizer.Add(self.lblname, (1, 0))
-                self.sizer.Add(self.editname, (1, 0))
-                self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
-        
-                # Set simple sizer for a nice border
-                self.border = wx.BoxSizer()
-                self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
-                
-                # Use the sizers
-                self.panel.SetSizerAndFit(self.border)  
-                self.SetSizerAndFit(self.windowSizer)  
-                #self.result.SetLabel(msg)
-                # Set event handlers
-                #self.Show()
-                self.button.Bind(wx.EVT_BUTTON, self.OnClose)
-                self.Bind(wx.EVT_CLOSE,self.OnClose)
-            
-            def OnClose(self,e):
-                #wx.LogMessage("c")
-                e.Skip()
-                #self.Close()
-                self.Destroy()
-            
-            #def OnButton(self, e):
-            #    self.result.SetLabel(self.editname.GetValue())
-            def setMsg(self, t_msg):
-                self.editname.SetValue(t_msg)
-
-
-                
-        def f_mm(raw):
-            return repr(raw/mm_ius)
-        
-        board = pcbnew.GetBoard()
-        
-        #fileName = GetBoard().GetFileName()
-        fileName = pcbnew.GetBoard().GetFileName()
-        if len(fileName)==0:
-            wx.LogMessage("a board needs to be saved/loaded!")
+        #from https://github.com/MitjaNemec/Kicad_action_plugins
+        #hack wxFormBuilder py2/py3
+        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        aParameters = Positions_Dlg(_pcbnew_frame)
+        aParameters.Show()
+        modal_result = aParameters.ShowModal()
+        if modal_result == wx.ID_OK:
+            DirName = aParameters.m_textCtrlDir.GetValue()
+            #wx.LogMessage(DirName)
+            #wx.LogMessage(LayerName+';'+str(LayerIndex)+';'+LayerStdName)
+            GenPos(DirName)
         else:
-            LogMsg=''
-            # msg="'get_pos.py'"+os.linesep
-            msg="Generate POS output: version = "+___version___+os.linesep
-            #msg+="Generate POS output"+os.linesep
-             #print (msg)
-            #LogMsg=msg+'\n\n'
-            
-            print(msg)
-            LogMsg+=msg
-            reply=generate_POS()
-            LogMsg+=reply
-            
+            None  # Cancel
+
+##
+###class displayDialog(wx.Dialog):
+###    """
+###    The default frame
+###    http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
+###    """
+###
+###    #----------------------------------------------------------------------
+###    #def __init__(self):
+###    #    """Constructor"""
+###    #    wx.Frame.__init__(self, None, title="Display Frame", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)
+###    #    panel = wx.Panel(self)
+###    def __init__(self, parent):
+###        wx.Dialog.__init__(self, parent, id=-1, title="Generate POS output")#
+###        #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION) 
+###        #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION)
+###        #, pos=DefaultPosition, size=DefaultSize, style = wx.DEFAULT_FRAME_STYLE & (~wx.MAXIMIZE_BOX), name="fname")
+###        #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
+###        #
+###        
+###        self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
+###        #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
+###        self.panel = wx.Panel(self)     
+###        self.title = wx.StaticText(self.panel, label="Generate POS debug:")
+###        #self.result = wx.StaticText(self.panel, label="")
+###        #self.result.SetForegroundColour('#FF0000')
+###        self.button = wx.Button(self.panel, label="Close")
+###        #self.lblname = wx.StaticText(self.panel, label="Your name:")
+###        #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
+###        self.editname = wx.TextCtrl(self.panel, size = (600, 500), style = wx.TE_MULTILINE|wx.TE_READONLY)
+###
+###
+###        # Set sizer for the frame, so we can change frame size to match widgets
+###        self.windowSizer = wx.BoxSizer()
+###        self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
+###
+###        # Set sizer for the panel content
+###        self.sizer = wx.GridBagSizer(5, 0)
+###        self.sizer.Add(self.title, (0, 0))
+###        #self.sizer.Add(self.result, (1, 0))
+###        #self.sizer.Add(self.lblname, (1, 0))
+###        self.sizer.Add(self.editname, (1, 0))
+###        self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
+###
+###        # Set simple sizer for a nice border
+###        self.border = wx.BoxSizer()
+###        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+###        
+###        # Use the sizers
+###        self.panel.SetSizerAndFit(self.border)  
+###        self.SetSizerAndFit(self.windowSizer)  
+###        #self.result.SetLabel(msg)
+###        # Set event handlers
+###        #self.Show()
+###        self.button.Bind(wx.EVT_BUTTON, self.OnClose)
+###        self.Bind(wx.EVT_CLOSE,self.OnClose)
+###    
+###    def OnClose(self,e):
+###        #wx.LogMessage("c")
+###        e.Skip()
+###        #self.Close()
+###        self.Destroy()
+###    
+###    #def OnButton(self, e):
+###    #    self.result.SetLabel(self.editname.GetValue())
+###    def setMsg(self, t_msg):
+###        self.editname.SetValue(t_msg)
+###
+
+def GenPos(dir):                
+    def f_mm(raw):
+        return repr(raw/mm_ius)
+    
+    board = pcbnew.GetBoard()
+    
+    #fileName = GetBoard().GetFileName()
+    fileName = pcbnew.GetBoard().GetFileName()
+    if len(fileName)==0:
+        wx.MessageBox("a board needs to be saved/loaded!")
+    else:
+        LogMsg=''
+        # msg="'get_pos.py'"+os.linesep
+        msg="Generate POS output: version = "+___version___+os.linesep
+        #msg+="Generate POS output"+os.linesep
+         #print (msg)
+        #LogMsg=msg+'\n\n'
+        
+        #print(msg)
+        LogMsg+=msg
+        reply=generate_POS(dir)
+        LogMsg+=reply
+        wx.LogMessage(LogMsg)
+        
+        if 0:
             frame = displayDialog(None)
             #frame = wx.Frame(None)
             frame.Center()
