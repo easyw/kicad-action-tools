@@ -24,13 +24,15 @@
 # Created: 14.04.2016
 # Copyright (C) 2016, Manfred Moitzi
 # License: MIT License
+
+#import pcbnew;pcbnew.GetWizardsBackTrace()
 from __future__ import unicode_literals
 dxf_parser="r12writer from ezdxf 0.7.6"
 __author__ = "mozman <mozman@gmx.at>"
 
 script_name="kicadpcb2dxf"
 __author_script__="easyw Maurice"
-___version___="3.8x"
+___version___="3.8.1"
 
 from contextlib import contextmanager
 
@@ -199,8 +201,12 @@ def dxf_tag(code, value):
 ###################################################################
 ##real python code easyw
 import sys  
-reload(sys)  
-sys.setdefaultencoding('utf8')  #to accept utf8 chars
+if sys.version_info[0] == 2: #if py2:
+    reload(sys)  
+    sys.setdefaultencoding('utf8')  #to accept utf8 chars
+#else:
+#    import importlib
+#    importlib.reload(sys)
 import re, os
 from math import sqrt, atan2, degrees, sin, cos, radians
 
