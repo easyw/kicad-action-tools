@@ -257,7 +257,7 @@ class pcb2dxf( pcbnew.ActionPlugin ):
             #found_selected=False
             #board = pcbnew.GetBoard()
             
-            dlg=wx.MessageBox( 'Only SAVED board file will be exported to DXF file', 'Confirm',  wx.OK | wx.CANCEL | wx.ICON_INFORMATION )
+            dlg=wx.MessageBox( 'Exporting technical layers of pcb to DXF\nOnly SAVED board file will be exported to DXF file\n\nversion '+___version___, 'Confirm',  wx.OK | wx.CANCEL | wx.ICON_INFORMATION )
             if dlg == wx.OK:
                 if os.path.isfile(out_filename):
                     dlg=wx.MessageBox( 'Overwrite DXF file?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION )
