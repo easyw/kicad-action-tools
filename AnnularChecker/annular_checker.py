@@ -367,62 +367,62 @@ def calculate_AR():
                     else:
                         PassCN = PassCN+1
                             
-                #if FailCV >0:
-                #writeTxt('\n')
-                msg = "TH PADS that Pass = "+repr(PassC)+"; Fails = "+repr(FailC)
-                if FailC >0:
-                    rt.BeginBold()
-                writeTxt("TH PADS that Pass = "+repr(PassC)+"; ")
-                if FailC >0:
-                    rt.BeginTextColour('red')
-                writeTxt("Fails = "+repr(FailC)+'\n')
-                if FailC >0:
-                    rt.EndTextColour()
-                    rt.EndBold()
-                print(msg)
-                LogMsg+=msg+'\n'
-                
-                msg="NPTH PADS that Pass = "+repr(PassCN)+"; Fails = "+repr(FailCN)
-                #writeTxt('\n')
-                if FailCN >0:
-                    rt.BeginBold()
-                writeTxt("NPTH PADS that Pass = "+repr(PassCN)+"; ")
-                if FailCN >0:
-                    rt.BeginTextColour('red')
-                writeTxt("Fails = "+repr(FailCN)+'\n')
-                if FailC >0:
-                    rt.EndTextColour()
-                    rt.EndBold()
-                print(msg)
-                LogMsg+=msg+'\n'
-                
-                pcbName = (os.path.splitext(GetBoard().GetFileName())[0]) #filename no ext
-                #wx.LogMessage(pcbName)#LogMsg)
-                ##wx.LogMessage(LogMsg)
-                FC=r"C:\FreeCAD\bin\freecad.exe"
-                kSU=r"C:\Cad\Progetti_K\3D-FreeCad-tools\kicad-StepUp-tools.FCMacro"
-                #subprocess.check_call([FC, kSU, pcbName])
-                ##p = subprocess.Popen([FC, kSU, pcbName])
-                
-                #found_violations=False
-                if (FailC+FailCN+FailCV)>0:
-                    found_violations=True
-                
-                if found_violations:
-                    #frame.m_staticTitle = wx.StaticText(frame, label=" Check result: (Violations found)")
-                    aResult.m_staticTitle.SetLabel(" Check result: (Violations found)")
-                    #self.title.SetForegroundColour('#FF0000')
-                    aResult.m_staticTitle.SetBackgroundColour('#FF0000')
-                    font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                    aResult.m_staticTitle.SetFont(font)
-                else:
-                    #frame.m_staticTitle = wx.StaticText(frame, label=" Annular Check result: OK")
-                    aResult.m_staticTitle.SetLabel(" Annular Check result: OK")
-                    aResult.m_staticTitle.SetBackgroundColour('#00FF00')            
-                    font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
-                    aResult.m_staticTitle.SetFont(font)
-                
-                
+        #if FailCV >0:
+        #writeTxt('\n')
+        msg = "TH PADS that Pass = "+repr(PassC)+"; Fails = "+repr(FailC)
+        if FailC >0:
+            rt.BeginBold()
+        writeTxt("TH PADS that Pass = "+repr(PassC)+"; ")
+        if FailC >0:
+            rt.BeginTextColour('red')
+        writeTxt("Fails = "+repr(FailC)+'\n')
+        if FailC >0:
+            rt.EndTextColour()
+            rt.EndBold()
+        print(msg)
+        LogMsg+=msg+'\n'
+        
+        msg="NPTH PADS that Pass = "+repr(PassCN)+"; Fails = "+repr(FailCN)
+        #writeTxt('\n')
+        if FailCN >0:
+            rt.BeginBold()
+        writeTxt("NPTH PADS that Pass = "+repr(PassCN)+"; ")
+        if FailCN >0:
+            rt.BeginTextColour('red')
+        writeTxt("Fails = "+repr(FailCN)+'\n')
+        if FailC >0:
+            rt.EndTextColour()
+            rt.EndBold()
+        print(msg)
+        LogMsg+=msg+'\n'
+        
+        pcbName = (os.path.splitext(GetBoard().GetFileName())[0]) #filename no ext
+        #wx.LogMessage(pcbName)#LogMsg)
+        ##wx.LogMessage(LogMsg)
+        FC=r"C:\FreeCAD\bin\freecad.exe"
+        kSU=r"C:\Cad\Progetti_K\3D-FreeCad-tools\kicad-StepUp-tools.FCMacro"
+        #subprocess.check_call([FC, kSU, pcbName])
+        ##p = subprocess.Popen([FC, kSU, pcbName])
+        
+        #found_violations=False
+        if (FailC+FailCN+FailCV)>0:
+            found_violations=True
+        
+        if found_violations:
+            #frame.m_staticTitle = wx.StaticText(frame, label=" Check result: (Violations found)")
+            aResult.m_staticTitle.SetLabel(" Check result: (Violations found)")
+            #self.title.SetForegroundColour('#FF0000')
+            aResult.m_staticTitle.SetBackgroundColour('#FF0000')
+            font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+            aResult.m_staticTitle.SetFont(font)
+        else:
+            #frame.m_staticTitle = wx.StaticText(frame, label=" Annular Check result: OK")
+            aResult.m_staticTitle.SetLabel(" Annular Check result: OK")
+            aResult.m_staticTitle.SetBackgroundColour('#00FF00')            
+            font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
+            aResult.m_staticTitle.SetFont(font)
+        
+        
         aResult.Show()
         modal_result = aResult.ShowModal()
         if modal_result == wx.ID_OK:
