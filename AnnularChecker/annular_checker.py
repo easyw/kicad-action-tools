@@ -21,7 +21,7 @@
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.6.1"
+___version___="1.6.2"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
@@ -68,7 +68,8 @@ class AnnularResult_Dlg(AnnularResultDlg.AnnularResultDlg):
             super(AnnularResult_Dlg, self).SetSizeHints(sz1, sz2)
 
     def onOK(self, event):
-        return self.EndModal(wx.ID_OK) # if modal_result == wx.ID_OK:
+        self.Destroy()
+        #return self.EndModal(wx.ID_OK) # if modal_result == wx.ID_OK:
         
     def OnClickCopy(self, event):  
         self.m_richTextResult.SelectAll()
@@ -424,23 +425,12 @@ def calculate_AR():
         
         
         aResult.Show()
-        modal_result = aResult.ShowModal()
-        if modal_result == wx.ID_OK:
-            aResult.Destroy()
-        if modal_result == wx.ID_OK:
-            aResult.Destroy()
+        #modal_result = aResult.ShowModal()
+        #if modal_result == wx.ID_OK:
+        #    aResult.Destroy()
+        #if modal_result == wx.ID_OK:
+        #    aResult.Destroy()
         
-        # ##frame = displayDialog(None)
-        # #frame = wx.Frame(None)
-        # frame.Center()
-        # #frame.setMsg(LogMsg)
-        # #frame.Show(True)
-        # frame.ShowModal()
-        # #frame.show()
-        # frame.Destroy()
-        # #frame = wx.wxFrame(None, 10110, 'T-Make', size=wx.wxSize(100,100),
-        # #           style=wx.wxSTAY_ON_TOP)
-        # #frame.show()
         
 # annular_check().register()
 if __name__ == "__main__":
