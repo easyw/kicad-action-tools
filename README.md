@@ -1,9 +1,9 @@
-# kicad-action-plugins
-#### <font color='navy'><b>kicad action plugin tools</b></font>
+# kicad-action-tools
+#### <font color='navy'><b>A suite of kicad action plugin tools</b></font>
 
-- ### action_menu_annular_check.py
-A script to check for annular ring violations  
-for PTH, NPTH pads and vias  
+- ### Annular Ring Checker
+Check your kicad_pcb for annular ring violations:  
+PTH Plated Trough Hole, NPTH Non Plated Trough Hole Pads and Vias  
 
 - ### action_menu_pcb2dxf
 A script to export technical layers of kicad PCB to DXF  
@@ -25,7 +25,7 @@ release "1.5.3"
 
 'action_menu_annular_check.py' checking PCB for Annular Ring in PTH, NPTH and Vias  
 (SMD, Connector and NPTH are skipped)  
-default Annular Ring >= 0.15 both for TH Pads and Vias  
+default Annular Ring >= 0.125 both for TH Pads and Vias  
 to change values modify:  
 
     AR_SET = 0.150   #minimum annular accepted for pads  

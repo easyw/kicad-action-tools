@@ -8,20 +8,14 @@
 # annular.py checking PCB for Annular Ring in Vias and TH Pads
 # (SMD, Connector and NPTH are skipped)
 # default Annular Ring >= 0.15 both for TH Pads and Vias
-# to change values modify:
-# 
-#     AR_SET = 0.150   #minimum annular accepted for pads
-#     AR_SET_V = 0.150  #minimum annular accepted for vias
-
-#  annular.py
-
+#
 
 #### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.6.2"
+___version___="1.6.3"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
@@ -124,17 +118,15 @@ class Annular_Dlg(AnnularDlg.AnnularDlg):
         else:
             super(Annular_Dlg, self).SetSizeHints(sz1, sz2)
 
-    # def onDeleteClick(self, event):
-    #     return self.EndModal(wx.ID_DELETE)
-    # 
-    # def onConnectClick(self, event):
-    #     return self.EndModal(wx.ID_REVERT)
-
     def __init__(self,  parent):
         import wx
         AnnularDlg.AnnularDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
+        #c1.Bind(wx.EVT_CHECKBOX, self.OntextMetric, c1)
+        #self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck, self.m_checkBoxPHD)
+        self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
+        #self.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
         #self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         #self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
         #if wx.__version__ < '4.0':
@@ -143,6 +135,22 @@ class Annular_Dlg(AnnularDlg.AnnularDlg):
         #else:
         #    self.m_buttonReconnect.SetToolTip( u"Select two converging Tracks to re-connect them\nor Select tracks including one round corner to be straighten" )
         #    self.m_buttonRound.SetToolTip( u"Select two connected Tracks to round the corner\nThen choose distance from intersection and the number of segments" )
+    def OnClickCheck(self, event):  
+        #self.Destroy()
+        if self.m_checkBoxPHD.IsChecked():
+            #self.Destroy()
+            self.m_staticTextPHD.Enable()
+            self.m_textCtrlPHD.Enable()
+        else:
+            self.m_staticTextPHD.Disable()
+            self.m_textCtrlPHD.Disable()
+            
+    # def onDeleteClick(self, event):
+    #     return self.EndModal(wx.ID_DELETE)
+    # 
+    # def onConnectClick(self, event):
+    #     return self.EndModal(wx.ID_REVERT)
+
 
 # Python plugin stuff
 class annular_check( pcbnew.ActionPlugin ):
@@ -150,15 +158,8 @@ class annular_check( pcbnew.ActionPlugin ):
     A script to check for annular ring violations
     both for TH pads and vias 
     requirements: KiCAD pcbnew >= 4.0
-    annular.py release "1.5.1"
-    
-    annular.py checking PCB for Annular Ring in Vias and TH Pads
-    (SMD, Connector and NPTH are skipped)
-    default Annular Ring >= 0.15 both for TH Pads and Vias
-    to change values modify:
-    
-        AR_SET = 0.150   #minimum annular accepted for pads
-        AR_SET_V = 0.150  #minimum annular accepted for vias
+        AR_SET    minimum annular accepted for pads
+        AR_SET_V  minimum annular accepted for vias
     """
     global ___version___
     def defaults( self ):
@@ -169,7 +170,7 @@ class annular_check( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Annular check \nversion "+___version___
+        self.name = "Annular checker \nversion "+___version___
         self.category = "Checking PCB"
         self.description = "Automaticaly check annular on an existing PCB"
         #self.pcbnew_icon_support = hasattr(self, "show_toolbar_button")
@@ -184,11 +185,12 @@ class annular_check( pcbnew.ActionPlugin ):
         aParameters = Annular_Dlg(_pcbnew_frame)
         aParameters.m_LabelTitle.SetLabel("Check annular ring: version:  "+___version___)
         aParameters.m_textCtrlARP.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
-        aParameters.m_staticTextPHD.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
+        aParameters.m_staticTextPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
         aParameters.m_textCtrlARV.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
         aParameters.m_staticTextARV.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
         aParameters.m_textCtrlPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
         aParameters.m_staticTextARP.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
+        aParameters.m_checkBoxPHD.SetToolTip( wx.ToolTip(u"use drill size as finished hole size\nadding an extra drill margin" ))
         aParameters.m_textCtrlPHD.SetValue('0.1')
         aParameters.m_textCtrlARP.SetValue('0.125')
         aParameters.m_textCtrlARV.SetValue('0.125')
@@ -200,9 +202,12 @@ class annular_check( pcbnew.ActionPlugin ):
             phd = float(aParameters.m_textCtrlPHD.GetValue().replace(',','.'))
             ar  = float(aParameters.m_textCtrlARP.GetValue().replace(',','.'))
             arv = float(aParameters.m_textCtrlARV.GetValue().replace(',','.'))
-            DRL_EXTRA=phd
-            DRL_EXTRA_ius=DRL_EXTRA * mm_ius
-            
+            if aParameters.m_checkBoxPHD.IsChecked():
+                DRL_EXTRA=phd
+                DRL_EXTRA_ius=DRL_EXTRA * mm_ius
+            else:
+                DRL_EXTRA=0
+                DRL_EXTRA_ius=DRL_EXTRA * mm_ius
             AR_SET = ar   #minimum annular accepted for pads
             MIN_AR_SIZE = AR_SET * mm_ius
             

@@ -33,15 +33,7 @@ class AnnularDlg ( wx.Dialog ):
 
 		gSizer1 = wx.GridSizer( 0, 2, 0, 0 )
 
-		self.m_staticTextPHD = wx.StaticText( self, wx.ID_ANY, u"PH Drill margin", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticTextPHD.Wrap( -1 )
-
-		gSizer1.Add( self.m_staticTextPHD, 1, wx.ALL, 5 )
-
-		self.m_textCtrlPHD = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer1.Add( self.m_textCtrlPHD, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
-
-		self.m_staticTextARV = wx.StaticText( self, wx.ID_ANY, u"AR Vias", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticTextARV = wx.StaticText( self, wx.ID_ANY, u"AR Vias (mm)", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticTextARV.Wrap( -1 )
 
 		gSizer1.Add( self.m_staticTextARV, 0, wx.ALL, 5 )
@@ -49,13 +41,28 @@ class AnnularDlg ( wx.Dialog ):
 		self.m_textCtrlARV = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		gSizer1.Add( self.m_textCtrlARV, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
 
-		self.m_staticTextARP = wx.StaticText( self, wx.ID_ANY, u"AR Pads", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticTextARP = wx.StaticText( self, wx.ID_ANY, u"AR Pads (mm)", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticTextARP.Wrap( -1 )
 
 		gSizer1.Add( self.m_staticTextARP, 0, wx.ALL, 5 )
 
 		self.m_textCtrlARP = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		gSizer1.Add( self.m_textCtrlARP, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+		self.m_staticTextPHD = wx.StaticText( self, wx.ID_ANY, u"PH Drill margin (mm)", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticTextPHD.Wrap( -1 )
+
+		self.m_staticTextPHD.Enable( False )
+
+		gSizer1.Add( self.m_staticTextPHD, 1, wx.ALL, 5 )
+
+		self.m_textCtrlPHD = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_textCtrlPHD.Enable( False )
+
+		gSizer1.Add( self.m_textCtrlPHD, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+
+		self.m_checkBoxPHD = wx.CheckBox( self, wx.ID_ANY, u"use drill size as finished hole size", wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer1.Add( self.m_checkBoxPHD, 0, wx.ALL, 5 )
 
 
 		bSizer3.Add( gSizer1, 1, wx.ALIGN_CENTER|wx.ALL, 5 )
