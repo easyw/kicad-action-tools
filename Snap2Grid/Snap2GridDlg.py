@@ -40,6 +40,9 @@ class Snap2GridDlg ( wx.Dialog ):
 		self.m_comboBoxGrid.SetSelection( 0 )
 		bSizer31.Add( self.m_comboBoxGrid, 0, wx.ALL|wx.EXPAND, 5 )
 
+		self.m_bitmapS2G = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer31.Add( self.m_bitmapS2G, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
 
 		bSizer3.Add( bSizer31, 0, 0, 5 )
 

@@ -28,6 +28,9 @@ class PositionsDlg ( wx.Dialog ):
 
 		bSizer3.Add( self.m_comment, 0, wx.ALL|wx.EXPAND, 5 )
 
+		self.m_bitmapFab = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_bitmapFab, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
 		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer3.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
 

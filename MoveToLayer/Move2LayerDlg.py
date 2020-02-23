@@ -23,7 +23,7 @@ class Move2LayerDlg ( wx.Dialog ):
 
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_comment = wx.StaticText( self, wx.ID_ANY, u"Selected Objects will Move to chosen Layer", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_comment = wx.StaticText( self, wx.ID_ANY, u"Selected Objects will be Moved to chosen Layer", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_comment.Wrap( -1 )
 
 		bSizer3.Add( self.m_comment, 0, wx.ALL|wx.EXPAND, 5 )
@@ -38,6 +38,12 @@ class Move2LayerDlg ( wx.Dialog ):
 		m_comboBoxLayerChoices = []
 		self.m_comboBoxLayer = wx.ComboBox( self, wx.ID_ANY, u"Combo!", wx.DefaultPosition, wx.Size( 250,-1 ), m_comboBoxLayerChoices, 0 )
 		bSizer31.Add( self.m_comboBoxLayer, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_bitmapLayers = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer31.Add( self.m_bitmapLayers, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+		self.m_bitmapDwgs = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer31.Add( self.m_bitmapDwgs, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 
 		bSizer3.Add( bSizer31, 0, 0, 5 )

@@ -23,6 +23,9 @@ class AnnularDlg ( wx.Dialog ):
 
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
+		self.m_bitmapAR = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_bitmapAR, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
 		self.m_LabelTitle = wx.StaticText( self, wx.ID_ANY, u"Check annular ring", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_LabelTitle.Wrap( -1 )
 

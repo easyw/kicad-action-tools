@@ -12,7 +12,7 @@
 #import pcbnew
 #pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 import sys, os
 import pcbnew
 import datetime
@@ -57,6 +57,8 @@ class Snap2Grid_Dlg(Snap2GridDlg.Snap2GridDlg):
         Snap2GridDlg.Snap2GridDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
+        self.m_bitmapS2G.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./snap2grid.png")))
+        #self.SetIcon(wx.IconFromBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./snap2grid.png"))))
         #self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         #self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
         #if wx.__version__ < '4.0':

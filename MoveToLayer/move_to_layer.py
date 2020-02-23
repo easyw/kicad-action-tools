@@ -78,6 +78,9 @@ class Move2Layer_Dlg(Move2LayerDlg.Move2LayerDlg):
         Move2LayerDlg.Move2LayerDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
+        
+        self.m_bitmapLayers.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./add_polygon.png")))
+        self.m_bitmapDwgs.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./move2layer.png")))
         # self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         # self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
         # if wx.__version__ < '4.0':

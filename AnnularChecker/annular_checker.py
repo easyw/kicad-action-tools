@@ -126,6 +126,8 @@ class Annular_Dlg(AnnularDlg.AnnularDlg):
         #c1.Bind(wx.EVT_CHECKBOX, self.OntextMetric, c1)
         #self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck, self.m_checkBoxPHD)
         self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
+        self.m_bitmapAR.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./annular.png")))
+        
         #self.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
         #self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         #self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
@@ -450,21 +452,6 @@ if __name__ == "__main__":
 
 else:
     annular_check().register()
-
-
-# "b64_data" is a variable containing your base64 encoded jpeg
-annular_ico_b64_data =\
-"""
-iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAIQQAACEEB+v+u9gAAABl0RVh0U29mdHdhcmUAd3d
-3Lmlua3NjYXBlLm9yZ5vuPBoAAAJ5SURBVDiNdZRNSFRRFMd/976ZJjeBn2PUoiLaiMFkFkHIQ0NBdBUlJuIqiixmIYjQRgiJYKAMXRRSi6TCD5gaWiSFsy
-gixOyDpDAog8wn9SISapz33m0x82bmzcOzO/97/r973nn3XqGUojjCybIm4BhQD9Rl5XlgDnhi6ObTYo8oBIWTZeXAMNDlalW/FJYmMLd5fONA1NBN0wcKJ
-8sagftAZWRJcWHS5vCiouJ3pnClUvC8VnDtpOTTDgGwCpwydHM2Bwony8LAe6koH7hjc37aQXN8XwzAv5DgUo9krF0C/ABqDN1ck9n1G0D54C2H6OTmEICt
-KcXQTZvTCQegAhgFEFWzpW1A4uAHRaLfQhbPXgD+/8HfkKBhNMDXMACtEmgC6L/reCBWKGAzMmLxbQWWl2Fw0FJavqIkpYhO2m7aHADqNQcOLXq3DcSuKnp
-6Ajmhry8g1tfTxGJBVzryLuepl0Bk16qiJJUHKU0qOjryEDe6u4OF6e7vitCGAohIAFk0XCWEQkp8oWmeVAAiu78EFj5vF6S2iFyBtGxJPJ72gSYmPNpyOH
-McgAUJzFkazO/zetLRc4J43MayIJWCsTHLuTzkaellTa7rOVE1W9oOPDz6VjF90fI14QQ1RzhKCNsRhfpGEBqvB1jaKQDapKGbCeDBs/2C8Rb/XGTalsUQg
-Fin5kKmDN185DrPAD8HzmrcbpUony0flgZXujSGT+SuSC94L20LcA8obXiduSp1H8kdiz8l8KJWEOvUeLNXuJAuQzdnPKAsrBoYAY4DaA7sWck8I1+qKex0
-Cug1dHPNFcQmD1sL0AwcACJZeQF4BcwYuvm42PMfVgD11Y9MUIEAAAAASUVORK5CYII=
-""" 
 
 
 #  execfile("annular.py")

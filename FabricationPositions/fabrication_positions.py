@@ -62,21 +62,6 @@ def generate_POS(dir):
     out_filename_top_VIRTUAL=path+os.sep+dir+name+"_POS_top_Virtual.txt"
     out_filename_bot_VIRTUAL=path+os.sep+dir+name+"_POS_bot_Virtual.txt"
     out_filename_ALL=path+os.sep+dir+name+"_POS_All.txt"
-    #out_filename=path+os.sep+name+"_POS.txt"
-    #LogMsg1+="written to:" + lsep + out_filename_top_SMD + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_bot_SMD + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_top_THD + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_bot_THD + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_top_VIRTUAL + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_bot_VIRTUAL + lsep
-    #LogMsg1+="written to:" + lsep + out_filename_ALL + lsep
-    # print (LogMsg)
-    # 
-    # print ("### Module positions - created on %s ###" % datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-    # print ("### Printed by get_pos v1")
-    # print ("## Unit = mm, Angle = deg.")
-    # print ("## Side : All")
-    # print ("# Ref     Val        Package       PosX       PosY       Rot  Side    Type")
 
     Header_1="### Module positions - created on " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+lsep
     Header_1+="### Printed by pcb_positions plugin"+lsep
@@ -306,6 +291,7 @@ class Positions_Dlg(PositionsDlg.PositionsDlg):
         PositionsDlg.PositionsDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
+        self.m_bitmapFab.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./fabrication.png")))
         # self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         # self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
         # if wx.__version__ < '4.0':
@@ -333,7 +319,7 @@ class generatePOS( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Generate Fabrication POS output\nversion "+___version___
+        self.name = "Fabrication Position output \nversion "+___version___
         self.category = "Fabrication Output"
         self.description = "Generate POS output for SMD, THD, Virtual\nand Board Statistics"
         #self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
@@ -359,74 +345,6 @@ class generatePOS( pcbnew.ActionPlugin ):
         else:
             None  # Cancel
 
-##
-###class displayDialog(wx.Dialog):
-###    """
-###    The default frame
-###    http://stackoverflow.com/questions/3566603/how-do-i-make-wx-textctrl-multi-line-text-update-smoothly
-###    """
-###
-###    #----------------------------------------------------------------------
-###    #def __init__(self):
-###    #    """Constructor"""
-###    #    wx.Frame.__init__(self, None, title="Display Frame", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)
-###    #    panel = wx.Panel(self)
-###    def __init__(self, parent):
-###        wx.Dialog.__init__(self, parent, id=-1, title="Generate POS output")#
-###        #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION) 
-###        #, style=wx.DEFAULT_DIALOG_STYLE, wx.ICON_INFORMATION)
-###        #, pos=DefaultPosition, size=DefaultSize, style = wx.DEFAULT_FRAME_STYLE & (~wx.MAXIMIZE_BOX), name="fname")
-###        #, wx.ICON_INFORMATION) #, title="Annular Check", style=wx.DEFAULT_FRAME_STYLE, wx.ICON_INFORMATION)    
-###        #
-###        
-###        self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())
-###        #wx.IconFromBitmap(wx.Bitmap("icon.ico", wx.BITMAP_TYPE_ANY)))
-###        self.panel = wx.Panel(self)     
-###        self.title = wx.StaticText(self.panel, label="Generate POS debug:")
-###        #self.result = wx.StaticText(self.panel, label="")
-###        #self.result.SetForegroundColour('#FF0000')
-###        self.button = wx.Button(self.panel, label="Close")
-###        #self.lblname = wx.StaticText(self.panel, label="Your name:")
-###        #self.editname = wx.TextCtrl(self.panel, size=(140, -1))
-###        self.editname = wx.TextCtrl(self.panel, size = (600, 500), style = wx.TE_MULTILINE|wx.TE_READONLY)
-###
-###
-###        # Set sizer for the frame, so we can change frame size to match widgets
-###        self.windowSizer = wx.BoxSizer()
-###        self.windowSizer.Add(self.panel, 1, wx.ALL | wx.EXPAND)        
-###
-###        # Set sizer for the panel content
-###        self.sizer = wx.GridBagSizer(5, 0)
-###        self.sizer.Add(self.title, (0, 0))
-###        #self.sizer.Add(self.result, (1, 0))
-###        #self.sizer.Add(self.lblname, (1, 0))
-###        self.sizer.Add(self.editname, (1, 0))
-###        self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
-###
-###        # Set simple sizer for a nice border
-###        self.border = wx.BoxSizer()
-###        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
-###        
-###        # Use the sizers
-###        self.panel.SetSizerAndFit(self.border)  
-###        self.SetSizerAndFit(self.windowSizer)  
-###        #self.result.SetLabel(msg)
-###        # Set event handlers
-###        #self.Show()
-###        self.button.Bind(wx.EVT_BUTTON, self.OnClose)
-###        self.Bind(wx.EVT_CLOSE,self.OnClose)
-###    
-###    def OnClose(self,e):
-###        #wx.LogMessage("c")
-###        e.Skip()
-###        #self.Close()
-###        self.Destroy()
-###    
-###    #def OnButton(self, e):
-###    #    self.result.SetLabel(self.editname.GetValue())
-###    def setMsg(self, t_msg):
-###        self.editname.SetValue(t_msg)
-###
 
 def GenPos(dir):                
     def f_mm(raw):
@@ -464,48 +382,6 @@ def GenPos(dir):
             #frame.show()
             
 #generatePOS().register()
-
-# "b64_data" is a variable containing your base64 encoded jpeg
-getPos_ico_b64_data =\
-"""
-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
-gg==
-""" 
-
-
 
 #  execfile("round_tracks.py")
 
