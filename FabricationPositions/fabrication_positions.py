@@ -319,7 +319,7 @@ class generatePOS( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Fabrication Position output \nversion "+___version___
+        self.name = "Fabrication Footprint Position \nversion "+___version___
         self.category = "Fabrication Output"
         self.description = "Generate POS output for SMD, THD, Virtual\nand Board Statistics"
         #self.SetIcon(PyEmbeddedImage(getPos_ico_b64_data).GetIcon())

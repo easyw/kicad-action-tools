@@ -83,9 +83,9 @@ class snap_to_grid( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "Snap Selected Modules to Grid \nversion "+__version__
+        self.name = "Snap Selected Footprint(s) to Grid \nversion "+__version__
         self.category = "Modify PCB"
-        self.description = "Automaticaly Snap Selected Module(s) to Grid on an existing PCB"
+        self.description = "Automaticaly Snap Selected Footprint Module(s) to Grid on an existing PCB"
         #self.pcbnew_icon_support = hasattr(self, "show_toolbar_button")
         self.show_toolbar_button = True
         self.icon_file_name = os.path.join(os.path.dirname(__file__), './snap2grid.png')

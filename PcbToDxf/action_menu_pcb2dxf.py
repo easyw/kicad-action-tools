@@ -227,7 +227,7 @@ class pcb2dxf( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "export technical layers of pcb to DXF \nversion "+___version___
+        self.name = "Export pcb technical layers to DXF \nversion "+___version___
         self.category = "export PCB"
         self.description = "export technical layers of pcb to DXF (saved board)"
         self.show_toolbar_button = True
