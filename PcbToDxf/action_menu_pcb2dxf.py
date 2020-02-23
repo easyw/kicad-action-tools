@@ -24,13 +24,15 @@
 # Created: 14.04.2016
 # Copyright (C) 2016, Manfred Moitzi
 # License: MIT License
+
+#import pcbnew;pcbnew.GetWizardsBackTrace()
 from __future__ import unicode_literals
 dxf_parser="r12writer from ezdxf 0.7.6"
 __author__ = "mozman <mozman@gmx.at>"
 
 script_name="kicadpcb2dxf"
 __author_script__="easyw Maurice"
-___version___="3.8x"
+___version___="3.8.1"
 
 from contextlib import contextmanager
 
@@ -199,8 +201,12 @@ def dxf_tag(code, value):
 ###################################################################
 ##real python code easyw
 import sys  
-reload(sys)  
-sys.setdefaultencoding('utf8')  #to accept utf8 chars
+if sys.version_info[0] == 2: #if py2:
+    reload(sys)  
+    sys.setdefaultencoding('utf8')  #to accept utf8 chars
+#else:
+#    import importlib
+#    importlib.reload(sys)
 import re, os
 from math import sqrt, atan2, degrees, sin, cos, radians
 
@@ -221,9 +227,11 @@ class pcb2dxf( pcbnew.ActionPlugin ):
         self.description should be a comprehensive description
           of the plugin
         """
-        self.name = "export technical layers of pcb to DXF (saved board)"
+        self.name = "Export pcb technical layers to DXF \nversion "+___version___
         self.category = "export PCB"
         self.description = "export technical layers of pcb to DXF (saved board)"
+        self.show_toolbar_button = True
+        self.icon_file_name = os.path.join(os.path.dirname(__file__), './dxf_icon.png')
 
     def Run( self ):
         fileName = GetBoard().GetFileName()
@@ -249,7 +257,7 @@ class pcb2dxf( pcbnew.ActionPlugin ):
             #found_selected=False
             #board = pcbnew.GetBoard()
             
-            dlg=wx.MessageBox( 'Only SAVED board file will be exported to DXF file', 'Confirm',  wx.OK | wx.CANCEL | wx.ICON_INFORMATION )
+            dlg=wx.MessageBox( 'Exporting technical layers of pcb to DXF\nOnly SAVED board file will be exported to DXF file\n\nversion '+___version___, 'Confirm',  wx.OK | wx.CANCEL | wx.ICON_INFORMATION )
             if dlg == wx.OK:
                 if os.path.isfile(out_filename):
                     dlg=wx.MessageBox( 'Overwrite DXF file?', 'Confirm', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION )

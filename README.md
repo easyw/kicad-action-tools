@@ -1,45 +1,35 @@
-# kicad-action-plugins
-#### <font color='navy'><b>kicad action plugin tools</b></font>
+# kicad-action-tools
+#### <font color='navy'><b>A suite of kicad action plugin tools</b></font>
 
-- ### action_menu_annular_check.py
-A script to check for annular ring violations  
-for PTH, NPTH pads and vias  
+- ### Annular Ring Checker
+Check your kicad_pcb for annular ring violations:  
+PTH Plated Trough Hole, NPTH Non Plated Trough Hole Pads and Vias  
 
-- ### action_menu_pcb2dxf
-A script to export technical layers of kicad PCB to DXF  
-DXF generated file has single line draw as it should be for mechanical interchange (this option is missing in pcbnew plot)  
-  
-- ### action_menu_move_to_layer
-A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
+- ### Snap Selected Footprint(s) to Grid
+Tool to move the selected footprint module(s) to the Grid.  
+The Modules can be easily aligned to GridOrigin or to Auxiliary Origin. 
 
-- ### action_positions
-A script to Generate Position Files for SMD, THD, Virtual, ALL 
-  
+- ### Fabrication Footprint Position
+Tool for the creation of the necessary files for the production of the printed circuit board.  
+Generate Position Files for SMD, THD, Virtual and ALL components, referred to Auxiliary Origin. 
+
+- ### Move Selected Drawings to chosen Layer
+Tool to Move Selected Drawing(s) to the chosen new Layer.  
+
+- ### Export pcb technical layers to DXF
+Tool to export technical layers of kicad PCB to DXF.    
+The DXF generated file has single line draw and different layers for each pcb technical layer.
+ 
 ---
-## action_menu_annular_check.py
-A script to check for annular ring violations  
-for PTH, NPTH pads and vias  
-
-requirements: KiCAD pcbnew > 4.0 built with KICAD_SCRIPTING_ACTION_MENU option activated  
-release "1.5.3"  
-
-'action_menu_annular_check.py' checking PCB for Annular Ring in PTH, NPTH and Vias  
-(SMD, Connector and NPTH are skipped)  
-default Annular Ring >= 0.15 both for TH Pads and Vias  
-to change values modify:  
-
-    AR_SET = 0.150   #minimum annular accepted for pads  
-    AR_SET_V = 0.150  #minimum annular accepted for vias  
-    DRL_EXTRA = 0.100 #extra drill margin size for production  
+## Annular Ring Checker
+Check your kicad_pcb for annular ring violations:  
+PTH Plated Trough Hole, NPTH Non Plated Trough Hole Pads and Vias  
 
 Launch the Annular Check script in pcbnew from Tools menu:  
 ![Annular Check](screenshots/annular-checker.gif)
 
-### todo (annular_check)
-- [ ] add colors to output list  
-
 ---
-## action_menu_pcb2dxf
+## Export pcb technical layers to DXF
 **kicadpcb2dxf**  
 _dxf exporter for mechanical layers of a kicad_pcb board_  
 - "Dwgs", "Cmts", "Edge", "Eco1", "Eco2", "F.Fab", "B.Fab", "F.CrtYd", "B.CrtYd"  
@@ -61,13 +51,10 @@ done:
 - [x] added text support (mirror & alignement not supported)  
 - [x] added multiline text  
 - [x] add quote support  
-  
-### todo (kicadpcb2dxf)
-- [ ] tbd
 
 ---
-## action_menu_move_to_layer
-A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
+## Move Selected Drawings to chosen Layer
+Tool to Move Selected Drawing(s) to chosen new Layer
 
 requirements: KiCAD pcbnew > 4.0 built with KICAD_SCRIPTING_ACTION_MENU option activated  
 release "1.1.0"  
@@ -82,13 +69,3 @@ release "1.1.0"
 
 Launch the 'Move Selected drawings to chosen Layer' script in pcbnew from Tools menu  
 ![Move Selected drawings to chosen Layer](screenshots/move_to_layer.png)
-
-- ### action_positions
-A script to Generate Position Files for SMD, THD, Virtual, ALL
-
-The script will generate Fabrication POS files for:
-
-- SMD
-- THD
-- VIRTUAL
-- ALL
