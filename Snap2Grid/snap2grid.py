@@ -9,10 +9,9 @@
 #import snaptogrid; import importlib; importlib.reload(snaptogrid)
 
 ### plugins errors
-#import pcbnew
-#pcbnew.GetWizardsBackTrace()
+#import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 import sys, os
 import pcbnew
 import datetime
@@ -109,15 +108,17 @@ class snap_to_grid( pcbnew.ActionPlugin ):
             grid = aParameters.m_comboBoxGrid.GetStringSelection()
             gridSizeMM = float(grid.split('mm')[0])
             if aParameters.m_radioBtnGO.GetValue():
-                use_grid_origin = True
+                use_grid = 'gridorigin'
+            elif aParameters.m_radioBtnAO.GetValue():
+                use_grid = 'auxorigin'
             else:
-                use_grid_origin = False
-            snap2grid(gridSizeMM,use_grid_origin)
+                use_grid = 'topleft'
+            snap2grid(gridSizeMM,use_grid)
         else:
             None  # Cancel
 ##
 
-def snap2grid(gridSizeMM,use_grid_origin):
+def snap2grid(gridSizeMM,use_grid):
         
     pcb = pcbnew.GetBoard()
     gridOrigin = pcb.GetGridOrigin()
@@ -127,7 +128,7 @@ def snap2grid(gridSizeMM,use_grid_origin):
     #wxPoint(77470000, 135890000)
     for module in pcb.GetModules(): 
         if module.IsSelected():
-            if use_grid_origin:
+            if 'grid' in use_grid:
                 mpx = module.GetPosition().x - gridOrigin.x
                 mpy = module.GetPosition().y - gridOrigin.y
                 #print(mpx,mpy)
@@ -150,7 +151,7 @@ def snap2grid(gridSizeMM,use_grid_origin):
                 #module.SetPosition(wxPoint(mpOnGx+FromMM(100.0),mpOnGy+FromMM(2.0)))
                 #module.SetOrientation(10)
                 #Y_POS='{0:.4f}'.format(-1*pcbnew.ToMM(module.GetPosition().y - gridOrigin.y))
-            else:  # AuxOrigin
+            elif 'aux' in use_grid:  # AuxOrigin
                 mpx = module.GetPosition().x - auxOrigin.x
                 mpy = module.GetPosition().y - auxOrigin.y
                 #print(mpx,mpy)
@@ -173,6 +174,20 @@ def snap2grid(gridSizeMM,use_grid_origin):
                 #module.SetPosition(wxPoint(mpOnGx+FromMM(100.0),mpOnGy+FromMM(2.0)))
                 #module.SetOrientation(10)
                 #Y_POS='{0:.4f}'.format(-1*pcbnew.ToMM(module.GetPosition().y - gridOrigin.y))
+            else:
+                mpx = module.GetPosition().x #- auxOrigin.x
+                mpy = module.GetPosition().y #- auxOrigin.y
+                mpxOnG = int(mpx/FromMM(gridSizeMM))*FromMM(gridSizeMM) #+ auxOrigin.x
+                mpyOnG = int(mpy/FromMM(gridSizeMM))*FromMM(gridSizeMM) #+ auxOrigin.y
+                locked=''
+                if not module.IsLocked():
+                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                else:
+                    locked='LOCKED'
+                X_POS=str(module.GetPosition().x) # - gridOrigin.x)
+                X_POS="{0:<11}".format(X_POS)
+                Y_POS=str(module.GetPosition().y) # - gridOrigin.y)
+                Y_POS="{0:<11}".format(Y_POS)            
             Reference="{0:<10}".format(str(module.GetReference()))
             Value = str(module.GetValue())
             Value=(Value[:17] + '..') if len(Value) > 19 else Value
@@ -199,12 +214,15 @@ def snap2grid(gridSizeMM,use_grid_origin):
     if len(content)>0:
         content+=str(pcbnew.FromMM(gridSizeMM))+'\n'
         info='Snapped to grid: '+str(gridSizeMM)+'mm\n'
-        if use_grid_origin:
+        if 'grid' in use_grid:
             content+="Using GridOrigin as Ref"+'\n'
             info+="Using GridOrigin as Ref"+'\n'
-        else:
+        elif 'aux' in use_grid:
             content+="Using AuxOrigin as Ref"+'\n'
             info+="Using AuxOrigin as Ref"+'\n'
+        else:
+            content+="Using Top Left Origin as Ref"+'\n'
+            info+="Using Top Left Origin as Ref"+'\n'
         if debug:
             wxLogDebug(content,debug)
         #else:

@@ -17,7 +17,7 @@ import wx.xrc
 class Snap2GridDlg ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Snap to Grid", pos = wx.DefaultPosition, size = wx.Size( 499,394 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Snap to Grid", pos = wx.DefaultPosition, size = wx.Size( 499,491 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -54,6 +54,9 @@ class Snap2GridDlg ( wx.Dialog ):
 
 		self.m_radioBtnAO = wx.RadioButton( self, wx.ID_ANY, u"AuxOrigin reference", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer3.Add( self.m_radioBtnAO, 0, wx.ALL, 5 )
+
+		self.m_radioBtnZero = wx.RadioButton( self, wx.ID_ANY, u"Top Left (0,0)", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_radioBtnZero, 0, wx.ALL, 5 )
 
 		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer3.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
