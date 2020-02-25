@@ -126,7 +126,7 @@ class Annular_Dlg(AnnularDlg.AnnularDlg):
         #c1.Bind(wx.EVT_CHECKBOX, self.OntextMetric, c1)
         #self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck, self.m_checkBoxPHD)
         self.m_checkBoxPHD.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
-        self.m_bitmapAR.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./annular.png")))
+        self.m_bitmapAR.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./annular-help.png")))
         
         #self.Bind(wx.EVT_CHECKBOX, self.OnClickCheck)
         #self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
@@ -185,7 +185,7 @@ class annular_check( pcbnew.ActionPlugin ):
         _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
         #aParameters = RoundTrackDlg(None)
         aParameters = Annular_Dlg(_pcbnew_frame)
-        aParameters.m_LabelTitle.SetLabel("Check annular ring: version:  "+___version___)
+        aParameters.m_LabelTitle.SetLabel("version:  "+___version___)
         aParameters.m_textCtrlARP.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
         aParameters.m_staticTextPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
         aParameters.m_textCtrlARV.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))

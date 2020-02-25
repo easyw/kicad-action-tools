@@ -17,7 +17,7 @@ import wx.xrc
 class PositionsDlg ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generating Fab Positions", pos = wx.DefaultPosition, size = wx.Size( 499,296 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generating Fab Positions", pos = wx.DefaultPosition, size = wx.Size( 499,377 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -28,7 +28,7 @@ class PositionsDlg ( wx.Dialog ):
 
 		bSizer3.Add( self.m_comment, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.m_bitmapFab = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_bitmapFab = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 180,90 ), 0 )
 		bSizer3.Add( self.m_bitmapFab, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
 
 		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )

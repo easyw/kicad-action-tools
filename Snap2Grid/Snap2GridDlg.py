@@ -17,7 +17,7 @@ import wx.xrc
 class Snap2GridDlg ( wx.Dialog ):
 
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Snap to Grid", pos = wx.DefaultPosition, size = wx.Size( 499,491 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Snap to Grid", pos = wx.DefaultPosition, size = wx.Size( 499,584 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
@@ -27,6 +27,9 @@ class Snap2GridDlg ( wx.Dialog ):
 		self.m_comment.Wrap( -1 )
 
 		bSizer3.Add( self.m_comment, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.m_bitmapS2G = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.Size( 100,100 ), 0 )
+		bSizer3.Add( self.m_bitmapS2G, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 		bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -39,9 +42,6 @@ class Snap2GridDlg ( wx.Dialog ):
 		self.m_comboBoxGrid = wx.ComboBox( self, wx.ID_ANY, u"1.0mm   (39.37mils)", wx.DefaultPosition, wx.Size( -1,-1 ), m_comboBoxGridChoices, 0 )
 		self.m_comboBoxGrid.SetSelection( 0 )
 		bSizer31.Add( self.m_comboBoxGrid, 0, wx.ALL|wx.EXPAND, 5 )
-
-		self.m_bitmapS2G = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer31.Add( self.m_bitmapS2G, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 
 		bSizer3.Add( bSizer31, 0, 0, 5 )

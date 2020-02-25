@@ -56,7 +56,7 @@ class Snap2Grid_Dlg(Snap2GridDlg.Snap2GridDlg):
         Snap2GridDlg.Snap2GridDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
-        self.m_bitmapS2G.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./snap2grid.png")))
+        self.m_bitmapS2G.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./snap2grid-help.png")))
         #self.SetIcon(wx.IconFromBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./snap2grid.png"))))
         #self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         #self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)

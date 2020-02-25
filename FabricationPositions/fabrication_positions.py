@@ -291,7 +291,7 @@ class Positions_Dlg(PositionsDlg.PositionsDlg):
         PositionsDlg.PositionsDlg.__init__(self, parent)
         #self.GetSizer().Fit(self)
         self.SetMinSize(self.GetSize())
-        self.m_bitmapFab.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./fabrication.png")))
+        self.m_bitmapFab.SetBitmap(wx.Bitmap(os.path.join(os.path.dirname(__file__), "./fabrication-footprint-positions.png")))
         # self.m_buttonDelete.Bind(wx.EVT_BUTTON, self.onDeleteClick)
         # self.m_buttonReconnect.Bind(wx.EVT_BUTTON, self.onConnectClick)
         # if wx.__version__ < '4.0':

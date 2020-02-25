@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">PositionsDlg</property>
             <property name="pos"></property>
-            <property name="size">499,296</property>
+            <property name="size">499,377</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Generating Fab Positions</property>
@@ -168,7 +168,7 @@
                         <property name="pos"></property>
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
-                        <property name="size"></property>
+                        <property name="size">180,90</property>
                         <property name="subclass">; ; forward_declare</property>
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip"></property>
