@@ -191,7 +191,7 @@ class annular_check( pcbnew.ActionPlugin ):
         aParameters.m_textCtrlARV.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
         aParameters.m_staticTextARV.SetToolTip( wx.ToolTip(u"Annular Ring for Vias (mm)" ))
         aParameters.m_textCtrlPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
-        aParameters.m_staticTextARP.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
+        aParameters.m_staticTextARP.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
         aParameters.m_checkBoxPHD.SetToolTip( wx.ToolTip(u"use drill size as finished hole size\nadding an extra drill margin" ))
         aParameters.m_textCtrlPHD.SetValue('0.1')
         aParameters.m_textCtrlARP.SetValue('0.125')
