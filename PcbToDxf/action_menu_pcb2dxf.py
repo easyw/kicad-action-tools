@@ -32,7 +32,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 script_name="kicadpcb2dxf"
 __author_script__="easyw Maurice"
-___version___="3.8.1"
+___version___="3.8.2"
 
 from contextlib import contextmanager
 
@@ -307,6 +307,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -360,6 +362,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -413,6 +417,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -483,6 +489,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -514,6 +522,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -545,6 +555,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; create=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; create=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; create=1
                 if create==1:
                     coords=line.split('(',1)[-1]
                     coords=coords.split(" ")
@@ -589,6 +601,8 @@ def export_dxf(content,out_filename):
                     layer="FCrtYd"; color=7; createTxt=1
                 if "B.CrtYd" in line:
                     layer="BCrtYd"; color=8; createTxt=1
+                if "Margin" in line:
+                    layer="Margin"; color=9; createTxt=1
                 if createTxt==1:        
                     #(gr_text Rotate (at 325.374 52.705 15) (layer Eco2.User)
                     line=line.strip().split("(gr_text ")[1].split("(at")
