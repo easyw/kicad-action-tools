@@ -114,8 +114,13 @@ def generate_POS(dir):
     
     tracks = my_board.GetTracks()
     vias = []
+    if  hasattr(pcbnew,'VIA'):
+        via_ = pcbnew.VIA
+    else:
+        via_ = pcbnew.PCB_VIA_T
+    
     for via in tracks:
-        if type(via) is pcbnew.VIA:
+        if type(via) is via_:
             vias.append(via)
     vias_cnt = len(vias)
     
