@@ -30,7 +30,7 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
-___version___="1.2.3"
+___version___="1.2.4"
 
 from . import Move2LayerDlg
 
@@ -52,7 +52,13 @@ def MoveToLayer(pcb,layerId):
         LogMsg="selected drawings moved to "+layerName+" layer"
         wx.LogMessage(LogMsg)
 #        
-
+def find_pcbnew_w():
+    windows = wx.GetTopLevelWindows()
+    pcbneww = [w for w in windows if "pcbnew" in w.GetTitle().lower()]
+    if len(pcbneww) != 1:
+        return None
+    return pcbneww[0]
+#
 
 
 # Python plugin stuff
@@ -137,8 +143,9 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
         else:
             #from https://github.com/MitjaNemec/Kicad_action_plugins
             #hack wxFormBuilder py2/py3
-            _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
-            aParameters = Move2Layer_Dlg(_pcbnew_frame)
+            #_pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+            pcbnew_window = find_pcbnew_w()
+            aParameters = Move2Layer_Dlg(pcbnew_window)
             aParameters.Show()
             for l in range(pcbnew.PCB_LAYER_ID_COUNT):
                 aParameters.m_comboBoxLayer.Append(pcbnew.GetBoard().GetLayerName(l))
