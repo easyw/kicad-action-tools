@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.2"
+___version___="1.2.3"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -92,6 +92,9 @@ def generate_POS(dir):
     bb = my_board.GetBoardEdgesBoundingBox()
     pcb_height = bb.GetHeight() / mm_ius
     pcb_width = bb.GetWidth() / mm_ius 
+    
+    Header_1+= '## Pcb Height ' +'{0:.3f}'.format( pcb_height ) + 'mm, Pcb Width ' + '{0:.3f}'.format( pcb_width ) + 'mm' +' [based on Edge bounding box]' +lsep
+    
     #to add relative position to 
     #print ("Board Aux Origin: " + str(my_board.GetAuxOrigin()))
     
