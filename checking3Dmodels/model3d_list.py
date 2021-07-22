@@ -15,7 +15,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.0.0"
+___version___="1.0.2"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -24,20 +24,19 @@ import pcbnew
 import datetime
 import wx
 from pcbnew import *
-import base64
-from wx.lib.embeddedimage import PyEmbeddedImage
+# import base64
+# from wx.lib.embeddedimage import PyEmbeddedImage
 from sys import platform as _platform
 
-"""
-execfile (r"C:\Users\userC\AppData\Roaming\kicad\scripting\plugins\model3d-list.py")
-"""
+
+# execfile (r"C:\Users\userC\AppData\Roaming\kicad\scripting\plugins\model3d-list.py")
+
 
 import pcbnew
 import os.path
 
 def check3D():
     import os
-    
     
     # board = pcbnew.LoadBoard(r'C:\Cad\Project_K\testboard.kicad_pcb')
     my_board = pcbnew.GetBoard()
@@ -82,7 +81,10 @@ def check3D():
     out_filename_missing_3D_models=proj_path+os.sep+name+"_missing3Dmodels.txt"
     
     # get all footprints
-    footprints = my_board.GetModules()
+    if  hasattr(my_board,'GetModules'):
+        footprints = my_board.GetModules()
+    else:
+        footprints = my_board.GetFootprints()
     fp_without_models = []
     
     # go through all the footprints
@@ -168,7 +170,7 @@ def check3D():
         f_out.write(content)
     return Header_2
 
-class checkMissing3Dmodels( pcbnew.ActionPlugin ):
+class checkMissing3DM( pcbnew.ActionPlugin ):
     """
     A script to checking 3D models in kicad_pcb
     requirements: KiCAD pcbnew >= 4.0
@@ -191,7 +193,7 @@ class checkMissing3Dmodels( pcbnew.ActionPlugin ):
         self.show_toolbar_button = True
         
     def Run( self ):
-        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        #_pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
         check3DMissing()
 
 def check3DMissing():                
