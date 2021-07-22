@@ -19,7 +19,10 @@ Tool to Move Selected Drawing(s) to the chosen new Layer.
 - ### Export pcb technical layers to DXF
 Tool to export technical layers of kicad PCB to DXF.    
 The DXF generated file has single line draw and different layers for each pcb technical layer.
- 
+
+- ### Checking 3D missing models
+Tool to check the 3D missing models with the following extensions '.stp', '.step', '.stpZ'
+
 ---
 ## Annular Ring Checker
 Check your kicad_pcb for annular ring violations:  
