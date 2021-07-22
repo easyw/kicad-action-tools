@@ -12,3 +12,5 @@ from . import PcbToDxf
 
 from . import Snap2Grid
 
+from . import checking3Dmodels
+
