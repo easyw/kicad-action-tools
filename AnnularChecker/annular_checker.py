@@ -15,7 +15,7 @@
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.6.4"
+___version___="1.6.5"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
@@ -38,6 +38,7 @@ import pcbnew
 from pcbnew import *
 # import base64
 # from wx.lib.embeddedimage import PyEmbeddedImage
+import time
 
 from . import AnnularDlg
 from . import AnnularResultDlg
@@ -50,7 +51,14 @@ def wxLogDebug(msg,dbg):
     if dbg == True:
         wx.LogMessage(msg)
 #
- 
+def find_pcbnew_w():
+    windows = wx.GetTopLevelWindows()
+    pcbneww = [w for w in windows if "pcbnew" in w.GetTitle().lower()]
+    if len(pcbneww) != 1:
+        return None
+    return pcbneww[0]
+#
+            
 class AnnularResult_Dlg(AnnularResultDlg.AnnularResultDlg):
     # from https://github.com/MitjaNemec/Kicad_action_plugins
     # hack for new wxFormBuilder generating code incompatible with old wxPython
@@ -182,9 +190,16 @@ class annular_check( pcbnew.ActionPlugin ):
     def Run( self ):
         import sys,os
         #mm_ius = 1000000.0
-        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        # _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+
+        #while True:
+        #    time.sleep(1)
+        #    pcbnew_window = find_pcbnew_window()
+        #    if not pcbnew_window:
+        #        continue
+        pcbnew_window = find_pcbnew_w()
         #aParameters = RoundTrackDlg(None)
-        aParameters = Annular_Dlg(_pcbnew_frame)
+        aParameters = Annular_Dlg(pcbnew_window) # _pcbnew_frame)
         aParameters.m_LabelTitle.SetLabel("version:  "+___version___)
         aParameters.m_textCtrlARP.SetToolTip( wx.ToolTip(u"Annular Ring for Pads (mm)" ))
         aParameters.m_staticTextPHD.SetToolTip( wx.ToolTip(u"Drill extra margin (mm)" ))
@@ -281,8 +296,9 @@ def calculate_AR():
         wx.LogMessage("a board needs to be saved/loaded!")
     else:
         found_violations=False
-        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
-        aResult = AnnularResult_Dlg(_pcbnew_frame)
+        pcbnew_window = find_pcbnew_w()
+        # _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        aResult = AnnularResult_Dlg(pcbnew_window)
         #import pcbnew;pcbnew.GetWizardsBackTrace()
         writeTxt= aResult.m_richTextResult.WriteText
         rt = aResult.m_richTextResult
@@ -302,7 +318,12 @@ def calculate_AR():
                 
         # print "LISTING VIAS:"
         for item in board.GetTracks():
-            if type(item) is pcbnew.VIA:
+            if  hasattr(pcbnew,'VIA'):
+                via = pcbnew.VIA
+            else:
+                via = pcbnew.PCB_VIA_T
+            
+            if type(item) is via:
                 pos = item.GetPosition()
                 drill = item.GetDrillValue()
                 width = item.GetWidth()
@@ -334,13 +355,21 @@ def calculate_AR():
         print(msg)
         LogMsg+=msg+'\n'
         
-        for module in board.GetModules():
+        if  hasattr(board,'GetModules'):
+            footprints = board.GetModules()
+            PAD_ATTR_STANDARD = PAD_ATTRIB_STANDARD
+            PAD_ATTR_HOLE_NOT_PLATED = PAD_ATTRIB_HOLE_NOT_PLATED
+        else:
+            footprints = board.GetFootprints()
+            PAD_ATTR_STANDARD = PAD_ATTRIB_PTH # HOLE_ATTRIBUTE_HOLE_PAD
+            PAD_ATTR_HOLE_NOT_PLATED = HOLE_ATTRIBUTE_HOLE_MECHANICAL
+        for module in footprints:
             try:
                 module_Pads=module.PadsList()
             except:
                 module_Pads=module.Pads()
             for pad in module_Pads:                    #print(pad.GetAttribute())
-                if pad.GetAttribute() == PAD_ATTRIB_STANDARD: #TH pad
+                if pad.GetAttribute() == PAD_ATTR_STANDARD: #TH pad
                     ARv = annring_size(pad)
                     #print(f_mm(ARv))
                     if ARv  < MIN_AR_SIZE:
@@ -355,7 +384,7 @@ def calculate_AR():
                         FailC = FailC+1
                     else:
                         PassC = PassC+1
-                if pad.GetAttribute() == PAD_ATTRIB_HOLE_NOT_PLATED:
+                if pad.GetAttribute() == PAD_ATTR_HOLE_NOT_PLATED:
                     ARvX, ARvY = annringNP_size(pad)
                     #print(f_mm(ARvX));print(f_mm(ARvY))
                     if (ARvX) != 0 or ARvY != 0:
