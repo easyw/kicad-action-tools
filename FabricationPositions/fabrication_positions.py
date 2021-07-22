@@ -2,7 +2,7 @@
 #
 # A script to generate POS file for kicad_pcb
 # requirements: KiCAD pcbnew >= 4.0
-# release "1.1.1"
+# release "1.2.5"
 # copyright Maurice easyw
 # 
 # main script from https://forum.kicad.info/t/pcba-wants-all-parts-in-the-pos-file-not-just-smd/10045/6
@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.3"
+___version___="1.2.5"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -28,6 +28,15 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 """
 execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scripting/plugins/getpos.py")
 """
+
+def find_pcbnew_w():
+    windows = wx.GetTopLevelWindows()
+    pcbneww = [w for w in windows if "pcbnew" in w.GetTitle().lower()]
+    if len(pcbneww) != 1:
+        return None
+    return pcbneww[0]
+#
+
 
 def generate_POS(dir):
     import os
@@ -67,8 +76,11 @@ def generate_POS(dir):
     Header_1+="### Printed by pcb_positions plugin"+lsep
     Header_1+="## Unit = mm, Angle = deg."+lsep
     #LogMsg+="## Side : All"+lsep
-    Header_2="## Board Aux Origin: " + str(my_board.GetAuxOrigin())+lsep
-    
+    if hasattr(my_board, 'GetAuxOrigin'):
+        getAO = my_board.GetAuxOrigin()
+    else:
+        getAO = my_board.GetDesignSettings().m_AuxOrigin
+    Header_2="## Board Aux Origin: " + '{0:.3f}'.format( getAO.x / mm_ius)+'mm ,'+'{0:.3f}'.format(getAO.y / mm_ius)+'mm'+lsep
     Header_2+="{0:<10}".format("# Ref")+"{0:<20}".format("Val")+"{0:<20}".format("Package")+\
             "{0:<11}".format("PosX")+"{0:<11}".format("PosY")+"{0:<8}".format("  Rot")+\
             "{0:<10}".format("  Side")+"  Type"+lsep
@@ -107,16 +119,23 @@ def generate_POS(dir):
             vias.append(via)
     vias_cnt = len(vias)
     
-    for module in my_board.GetModules(): 
+    if  hasattr(my_board,'GetModules'):
+        footprints = my_board.GetModules()
+        TH=0;SMD=1;Virt=2
+    else:
+        footprints = my_board.GetFootprints()
+        TH=1;SMD=2;Virt=3
+        
+    for module in footprints: 
         #print ("%s \"%s\" %s %1.3f %1.3f %1.3f %s" % ( module.GetReference(), 
         #Nchars = 20
         # RefL = 10; ValL = 20
         
         md=""
-        if module.GetAttributes() == 0:   # PTH=0, SMD=1, Virtual = 2
+        if module.GetAttributes() == TH:   # PTH=0, SMD=1, Virtual = 2
             md = "THD"
             TH_pads+=module.GetPadCount()
-        elif module.GetAttributes() == 1:
+        elif module.GetAttributes() == SMD:
             md = "SMD"
             SMD_pads+=module.GetPadCount()
         else:
@@ -139,9 +158,9 @@ def generate_POS(dir):
         Package=(Package[:17] + '..') if len(Package) > 19 else Package
         Package="{0:<20}".format(Package)
         #Package="{0:<20}".format(str(module.GetFPID().GetLibItemName()))
-        X_POS='{0:.4f}'.format(pcbnew.ToMM(module.GetPosition().x - my_board.GetAuxOrigin().x ))
+        X_POS='{0:.4f}'.format(pcbnew.ToMM(module.GetPosition().x - getAO.x ))
         X_POS="{0:<11}".format(X_POS)
-        Y_POS='{0:.4f}'.format(-1*pcbnew.ToMM(module.GetPosition().y - my_board.GetAuxOrigin().y))
+        Y_POS='{0:.4f}'.format(-1*pcbnew.ToMM(module.GetPosition().y - getAO.y))
         Y_POS="{0:<11}".format(Y_POS)
         Rotation='{0:.1f}'.format((module.GetOrientation()/10))
         Rotation="{0:>6}".format(Rotation)+'  '
@@ -336,8 +355,9 @@ class generatePOS( pcbnew.ActionPlugin ):
         #http://stackoverflow.com/questions/1811691/running-an-outside-program-executable-in-python
         #from https://github.com/MitjaNemec/Kicad_action_plugins
         #hack wxFormBuilder py2/py3
-        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
-        aParameters = Positions_Dlg(_pcbnew_frame)
+        #_pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        pcbnew_window = find_pcbnew_w()
+        aParameters = Positions_Dlg(pcbnew_window)
         aParameters.Show()
         modal_result = aParameters.ShowModal()
         if modal_result == wx.ID_OK:
