@@ -15,7 +15,7 @@
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.6.5"
+___version___="1.7.0"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
@@ -58,7 +58,7 @@ def find_pcbnew_w():
         return None
     return pcbneww[0]
 #
-            
+
 class AnnularResult_Dlg(AnnularResultDlg.AnnularResultDlg):
     # from https://github.com/MitjaNemec/Kicad_action_plugins
     # hack for new wxFormBuilder generating code incompatible with old wxPython
@@ -292,6 +292,16 @@ def calculate_AR():
     PassCVN=FailCVN=0
     
     fileName = GetBoard().GetFileName()
+    dirpath = os.path.abspath(os.path.expanduser(fileName))
+    path, fname = os.path.split(dirpath)
+    ext = os.path.splitext(os.path.basename(fileName))[1]
+    name = os.path.splitext(os.path.basename(fileName))[0]
+    #wx.LogMessage(dir)
+    #lsep=os.linesep
+    lsep='\n'
+    proj_path = os.path.dirname(os.path.abspath(fileName))
+    out_filename_AR_checking=proj_path+os.sep+name+"_AR-Check.txt"
+    
     if len(fileName)==0:
         wx.LogMessage("a board needs to be saved/loaded!")
     else:
@@ -303,10 +313,12 @@ def calculate_AR():
         writeTxt= aResult.m_richTextResult.WriteText
         rt = aResult.m_richTextResult
         rt.BeginItalic()
+        writeTxt("AR checking written on:\n'"+out_filename_AR_checking+"'\n")
         writeTxt("'action_menu_annular_check.py'\n")
         #frame.m_richText1.WriteText("'action_menu_annular_check.py'\n")
         LogMsg=""
-        msg="'action_menu_annular_check.py'\n"
+        msg="AR checking written on:\n'"+out_filename_AR_checking+"'\n"
+        msg+="'action_menu_annular_check.py'\n"
         msg+="version = "+___version___
         writeTxt("version = "+___version___)
         msg+="\nTesting PCB for Annular Rings\nTH Pads >= "+repr(AR_SET)+" Vias >= "+repr(AR_SET_V)+"\nPHD margin on PTH = "+ repr(DRL_EXTRA)
@@ -321,7 +333,7 @@ def calculate_AR():
             if  hasattr(pcbnew,'VIA'):
                 via = pcbnew.VIA
             else:
-                via = pcbnew.PCB_VIA_T
+                via = pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_THROUGH #PCB_VIA_T
             
             if type(item) is via:
                 pos = item.GetPosition()
@@ -459,7 +471,9 @@ def calculate_AR():
             font = wx.Font(wx.DEFAULT, wx.DECORATIVE, wx.ITALIC, wx.BOLD)
             aResult.m_staticTitle.SetFont(font)
         
-        
+        with open(out_filename_AR_checking,'w') as f_out:
+            f_out.write(LogMsg)
+    
         aResult.Show()
         #modal_result = aResult.ShowModal()
         #if modal_result == wx.ID_OK:
