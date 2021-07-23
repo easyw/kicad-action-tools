@@ -11,7 +11,7 @@
 ### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 import sys, os
 import pcbnew
 import datetime
@@ -33,6 +33,13 @@ def wxLogDebug(msg,dbg):
     """printing messages only if show is omitted or True"""
     if dbg == True:
         wx.LogMessage(msg)
+#
+def find_pcbnew_w():
+    windows = wx.GetTopLevelWindows()
+    pcbneww = [w for w in windows if "pcbnew" in w.GetTitle().lower()]
+    if len(pcbneww) != 1:
+        return None
+    return pcbneww[0]
 #
  
 class Snap2Grid_Dlg(Snap2GridDlg.Snap2GridDlg):
@@ -94,9 +101,10 @@ class snap_to_grid( pcbnew.ActionPlugin ):
         #self.pcb = GetBoard()
         import sys,os
         #mm_ius = 1000000.0
-        _pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        #_pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
+        pcbnew_window = find_pcbnew_w()
         #aParameters = RoundTrackDlg(None)
-        aParameters = Snap2Grid_Dlg(_pcbnew_frame)
+        aParameters = Snap2Grid_Dlg(pcbnew_window)
         gridIndex = aParameters.m_comboBoxGrid.FindString('0.1mm     (3.94mils)')
         aParameters.m_comboBoxGrid.SetSelection(gridIndex)
         #aParameters.m_comboBoxGrid.Append('0.1mm (3.94mils)')
@@ -121,12 +129,21 @@ class snap_to_grid( pcbnew.ActionPlugin ):
 def snap2grid(gridSizeMM,use_grid):
         
     pcb = pcbnew.GetBoard()
-    gridOrigin = pcb.GetGridOrigin()
-    auxOrigin = pcb.GetAuxOrigin()
+    if hasattr(pcb, 'GetAuxOrigin'):
+        auxOrigin  = pcb.GetAuxOrigin()
+        gridOrigin = pcb.GetGridOrigin()
+    else:
+        auxOrigin  = pcb.GetDesignSettings().m_AuxOrigin
+        gridOrigin = pcb.GetDesignSettings().m_GridOrigin
+    if  hasattr(pcb,'GetModules'):
+        footprints = pcb.GetModules()
+    else:
+        footprints = pcb.GetFootprints()
+    
     content=''
     locked_fp=''
     #wxPoint(77470000, 135890000)
-    for module in pcb.GetModules(): 
+    for module in footprints: 
         if module.IsSelected():
             if 'grid' in use_grid:
                 mpx = module.GetPosition().x - gridOrigin.x
