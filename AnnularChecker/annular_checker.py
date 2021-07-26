@@ -15,7 +15,7 @@
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.7.0"
+___version___="1.7.1"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0
@@ -332,10 +332,15 @@ def calculate_AR():
         for item in board.GetTracks():
             if  hasattr(pcbnew,'VIA'):
                 via = pcbnew.VIA
+                testing = type(item)
             else:
-                via = pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_THROUGH #PCB_VIA_T
-            
-            if type(item) is via:
+                via = pcbnew.PCB_VIA  #'PCB_VIA'
+                item = pcbnew.Cast_to_PCB_VIA(item)
+                testing = type(item) #item.GetClass()
+
+            #writeTxt(str(testing))
+            if testing is via: # or via in testing:
+                #writeTxt(str(testing)+"here")
                 pos = item.GetPosition()
                 drill = item.GetDrillValue()
                 width = item.GetWidth()
