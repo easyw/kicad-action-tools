@@ -25,6 +25,9 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 """
 execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scripting/plugins/getpos.py")
 """
@@ -81,9 +84,10 @@ def generate_POS(dir):
     else:
         getAO = my_board.GetDesignSettings().m_AuxOrigin
     Header_2="## Board Aux Origin: " + '{0:.3f}'.format( getAO.x / mm_ius)+'mm ,'+'{0:.3f}'.format(getAO.y / mm_ius)+'mm'+lsep
-    Header_2+="{0:<10}".format("# Ref")+"{0:<20}".format("Val")+"{0:<20}".format("Package")+\
-            "{0:<11}".format("PosX")+"{0:<11}".format("PosY")+"{0:<8}".format("  Rot")+\
+    Header_2+="{0:<14}".format("# Ref")+"{0:<20}".format("Val")+"{0:<30}".format("Package")+\
+            "{0:<11}".format("PosX")+"{0:<11}".format("PosY")+"{0:<11}".format("Pin1_PosX")+"{0:<11}".format("Pin1_PosY")+"{0:<8}".format("  Rot")+\
             "{0:<10}".format("  Side")+"  Type"+lsep
+
     content_top_SMD=''
     content_bot_SMD=''
     content_top_THD=''
@@ -155,18 +159,33 @@ def generate_POS(dir):
         #Rotation=str(module.GetOrientation()/10)
         #Layer="top".ljust(Nchars) if module.GetLayer() == 0 else "bottom".ljust(Nchars)
         #Type=md
-        Reference="{0:<10}".format(str(module.GetReference()))
+        Reference="{0:<14}".format(str(module.GetReference()))
         Value = str(module.GetValue())
         Value=(Value[:17] + '..') if len(Value) > 19 else Value
         Value="{0:<20}".format(Value)
         Package = str(module.GetFPID().GetLibItemName())
-        Package=(Package[:17] + '..') if len(Package) > 19 else Package
-        Package="{0:<20}".format(Package)
+        Package=(Package[:27] + '..') if len(Package) > 29 else Package
+        Package="{0:<30}".format(Package)
         #Package="{0:<20}".format(str(module.GetFPID().GetLibItemName()))
         X_POS='{0:.4f}'.format(pcbnew.ToMM(module.GetPosition().x - getAO.x ))
         X_POS="{0:<11}".format(X_POS)
         Y_POS='{0:.4f}'.format(-1*pcbnew.ToMM(module.GetPosition().y - getAO.y))
         Y_POS="{0:<11}".format(Y_POS)
+
+        PIN1 = None
+        PIN1_XPOS = '{0:.4f}'.format(0)
+        PIN1_XPOS="{0:<11}".format(PIN1_XPOS)
+        PIN1_YPOS = '{0:.4f}'.format(0)
+        PIN1_YPOS="{0:<11}".format(PIN1_YPOS)
+        for pin in module.Pads():
+            if pin.GetName() == "1":
+                PIN1 = pin
+                PIN1_XPOS='{0:.4f}'.format(pcbnew.ToMM(PIN1.GetCenter().x - getAO.x ))
+                PIN1_XPOS="{0:<11}".format(PIN1_XPOS)
+                PIN1_YPOS='{0:.4f}'.format(pcbnew.ToMM(-1*PIN1.GetCenter().y - getAO.y ))
+                PIN1_YPOS="{0:<11}".format(PIN1_YPOS)
+                break
+
         Rotation='{0:.1f}'.format((module.GetOrientation()/10))
         Rotation="{0:>6}".format(Rotation)+'  '
         if module.GetLayer() == 0:
@@ -181,6 +200,8 @@ def generate_POS(dir):
         content+=Package
         content+=X_POS
         content+=Y_POS
+        content+=PIN1_XPOS
+        content+=PIN1_YPOS
         content+=Rotation
         content+=Layer
         content+=Type+lsep
