@@ -75,5 +75,6 @@ Launch the 'Move Selected drawings to chosen Layer' script in pcbnew from Tools 
 
 ---
 ## Checking 3D missing models
-![Check 3D missing models](checking3Dmodels/missing3dmodels.png)  a tool to check the 3D missing models with the following extensions '.stp', '.step', '.stpZ'
+![Check 3D missing models](checking3Dmodels/missing3dmodels.png)
+Tool to check the 3D missing models with the following extensions '.stp', '.step', '.stpZ'
 
