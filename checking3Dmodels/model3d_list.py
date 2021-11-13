@@ -15,7 +15,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.0.2"
+___version___="1.1.3"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -27,13 +27,14 @@ from pcbnew import *
 # import base64
 # from wx.lib.embeddedimage import PyEmbeddedImage
 from sys import platform as _platform
-
+import webbrowser
 
 # execfile (r"C:\Users\userC\AppData\Roaming\kicad\scripting\plugins\model3d-list.py")
 
-
 import pcbnew
 import os.path
+
+show = False
 
 def check3D():
     import os
@@ -49,6 +50,7 @@ def check3D():
     #wx.LogMessage(dir)
     #lsep=os.linesep
     lsep='\n'
+    content_log = ''
     
     # if running standalone (outside of pcbnew)
     if os.getenv("KISYS3DMOD") is None:
@@ -79,6 +81,7 @@ def check3D():
     # prepare folder for 3Dmodels
     proj_path = os.path.dirname(os.path.abspath(my_board.GetFileName()))
     out_filename_missing_3D_models=proj_path+os.sep+name+"_missing3Dmodels.txt"
+    out_log_missing_3D_models=proj_path+os.sep+name+"_log_missing3Dmodels.txt"
     
     # get all footprints
     if  hasattr(my_board,'GetModules'):
@@ -86,7 +89,14 @@ def check3D():
     else:
         footprints = my_board.GetFootprints()
     fp_without_models = []
-    
+
+    paths_to_check = []
+    #get all os env variable with 3D in
+    for k, v in sorted(os.environ.items()):
+        if '3d' in k.lower():
+            print(k+':', v)
+            paths_to_check.append(v)
+
     # go through all the footprints
     for fp in footprints:
         fp_ref = fp.GetReference()
@@ -97,7 +107,6 @@ def check3D():
         # for each 3D model find it's path
         for model in fp_models:
             model_path = model.m_Filename
-    
             # check if path is encoded with variables
             if "${" in model_path or "$(" in model_path:
                 # get environment variable name
@@ -113,7 +122,7 @@ def check3D():
                     clean_model_path = os.path.normpath(path + model_path[end_index + 1:])
                 # if variable is not defined, we can not find the model. Thus don't put it on the list
                 else:
-                    print("Can not find model defined with enviroment variable:\n" + model_path)
+                    content_log+=("Can not find model defined with enviroment variable:\n" + model_path) + lsep
                     fp_without_models.append((fp_ref, model_path))
                     continue
             # check if path is absolute or relative
@@ -122,19 +131,36 @@ def check3D():
             # check if model is given with absolute path
             elif os.path.exists(model_path):
                 clean_model_path = model_path
+            elif len(paths_to_check) > 0:
+            # elif (os.getenv('KISYS3DMOD') is not None):
+                found = False
+                for path in paths_to_check:
+                    # get 3D std path variable
+                    #path = os.getenv('KISYS3DMOD')
+                    # if variable is defined, get absolute path
+                    #if path is not None:
+                    clean_model_path = os.path.normpath(path + "//" + model_path)
+                    if os.path.exists(clean_model_path):
+                        found = True
+                        break
+                    # if variable is not defined, we can not find the model. Thus don't put it on the list
+                if not found:
+                    content_log+=("Can not find model defined with enviroment variable ("+path+" :\n" + model_path) + lsep
+                    fp_without_models.append((fp_ref, model_path))
+                    continue
             # otherwise we don't know how to parse the path
             else:
-                print("Ambiguios path for the model: " + model_path)
+                content_log+=("Ambiguous path for the model: " + model_path) + lsep
                 # test default 3D_library location "KISYS3DMOD"
                 if os.path.exists(os.path.normpath(os.path.join(os.getenv("KISYS3DMOD"), model_path))):
                     clean_model_path = os.path.normpath(os.path.join(os.getenv("KISYS3DMOD"), model_path))
-                    print("Going with: " + clean_model_path)
+                    content_log+=("Going with: " + clean_model_path) + lsep
                 # test in project folder location
                 elif os.path.exists(os.path.normpath(os.path.join(proj_path, model_path))):
                     clean_model_path = os.path.normpath(os.path.join(proj_path, model_path))
-                    print("Going with: " + clean_model_path)
+                    content_log+=("Going with: " + clean_model_path) + lsep
                 else:
-                    print("Can not find model defined with path:\n" + model_path)
+                    content_log+=("Can not find model defined with path:\n" + model_path) + lsep
                     fp_without_models.append((fp_ref, model_path))
                     clean_model_path = None
                     continue
@@ -152,7 +178,14 @@ def check3D():
     
             pass
         pass
-    print(repr(fp_without_models))
+    LogMsg=''
+    # msg="'get_pos.py'"+os.linesep
+    msg=  "Missing 3D models \nversion "+___version___+os.linesep
+    msg+= "NUM of 3D missing models:" + str(len(fp_without_models)) + lsep
+    
+    #print(msg)
+    LogMsg+=msg
+    content_log+=(str(repr(fp_without_models))) + lsep
     Header_1="### Missing 3D models - created on " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+lsep
     Header_1+="### Printed by checking_3D_models plugin"+lsep
     #LogMsg+="## Side : All"+lsep
@@ -162,13 +195,21 @@ def check3D():
     content=Header_1+Header_2
     for fp in fp_without_models:
         content+=str(fp)+lsep
-    content += "-------" + lsep + "NBR of 3D missing models:" + str(len(fp_without_models)) + lsep
+    content += "-------" + lsep + "NUM of 3D missing models:" + str(len(fp_without_models)) + lsep
     content += "checked extensions ['.stp', '.step', '.stpZ']"
     Header_2+="NBR of 3D missing models:" + str(len(fp_without_models))+ lsep
     # new_content = "\n".join(content)
     with open(out_filename_missing_3D_models,'w') as f_out:
         f_out.write(content)
-    return Header_2
+    with open(out_log_missing_3D_models,'w') as f_out:
+        f_out.write(content_log)
+    LogMsg+=Header_2
+    wx.LogMessage(LogMsg)
+    if len(fp_without_models) > 0 and show:
+        webbrowser.open('file://' + os.path.realpath(out_filename_missing_3D_models))
+        webbrowser.open('file://' + os.path.realpath(out_log_missing_3D_models))
+
+##
 
 class checkMissing3DM( pcbnew.ActionPlugin ):
     """
@@ -205,13 +246,13 @@ def check3DMissing():
     if len(fileName)==0:
         wx.MessageBox("a board needs to be saved/loaded!")
     else:
-        LogMsg=''
+        #LogMsg=''
         # msg="'get_pos.py'"+os.linesep
-        msg="Missing 3D models \nversion "+___version___+os.linesep
+        #msg="Missing 3D models \nversion "+___version___+os.linesep
         
         #print(msg)
-        LogMsg+=msg
+        #LogMsg+=msg
         reply=check3D()
-        LogMsg+=reply
-        wx.LogMessage(LogMsg)
+        #LogMsg+=reply
+        #wx.LogMessage(LogMsg)
         
