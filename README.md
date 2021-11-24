@@ -1,5 +1,5 @@
 # kicad-action-tools
-#### <font color='navy'><b>A suite of kicad action plugin tools</b></font>
+#### <font color='navy'><b>A suite of kicad action plugin tools</b></font> ![kicad-action-tools](icon.png)
 
 - ### Annular Ring Checker
 Check your kicad_pcb for annular ring violations:  
