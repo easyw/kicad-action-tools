@@ -11,7 +11,7 @@
 ### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 import sys, os
 import pcbnew
 import datetime
@@ -133,8 +133,8 @@ def snap2grid(gridSizeMM,use_grid):
         auxOrigin  = pcb.GetAuxOrigin()
         gridOrigin = pcb.GetGridOrigin()
     else:
-        auxOrigin  = pcb.GetDesignSettings().m_AuxOrigin
-        gridOrigin = pcb.GetDesignSettings().m_GridOrigin
+        auxOrigin  = pcb.GetDesignSettings().GetAuxOrigin()
+        gridOrigin = pcb.GetDesignSettings().GetGridOrigin()
     if  hasattr(pcb,'GetModules'):
         footprints = pcb.GetModules()
     else:

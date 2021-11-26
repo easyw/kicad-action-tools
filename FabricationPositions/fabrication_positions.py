@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.5"
+___version___="1.2.6"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -24,9 +24,6 @@ import wx
 from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 """
 execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scripting/plugins/getpos.py")
