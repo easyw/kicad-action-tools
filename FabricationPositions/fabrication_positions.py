@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.6"
+___version___="1.2.7"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -79,7 +79,7 @@ def generate_POS(dir):
     if hasattr(my_board, 'GetAuxOrigin'):
         getAO = my_board.GetAuxOrigin()
     else:
-        getAO = my_board.GetDesignSettings().m_AuxOrigin
+        getAO = my_board.GetDesignSettings().GetAuxOrigin()
     Header_2="## Board Aux Origin: " + '{0:.3f}'.format( getAO.x / mm_ius)+'mm ,'+'{0:.3f}'.format(getAO.y / mm_ius)+'mm'+lsep
     Header_2+="{0:<14}".format("# Ref")+"{0:<20}".format("Val")+"{0:<30}".format("Package")+\
             "{0:<11}".format("PosX")+"{0:<11}".format("PosY")+"{0:<11}".format("Pin1_PosX")+"{0:<11}".format("Pin1_PosY")+"{0:<8}".format("  Rot")+\
