@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.7"
+___version___="1.2.8"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 

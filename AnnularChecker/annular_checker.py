@@ -15,7 +15,7 @@
 
 global mm_ius, DRL_EXTRA, AR_SET, AR_SET_V, DRL_EXTRA_ius, MIN_AR_SIZE, MIN_AR_SIZE_V, found_violations, LogMsg, ___version___
 
-___version___="1.7.1"
+___version___="1.7.2"
 
 #wx.LogMessage("My message")
 mm_ius = 1000000.0

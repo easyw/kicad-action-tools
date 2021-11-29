@@ -32,7 +32,7 @@ __author__ = "mozman <mozman@gmx.at>"
 
 script_name="kicadpcb2dxf"
 __author_script__="easyw Maurice"
-___version___="3.8.2"
+___version___="3.8.3"
 
 from contextlib import contextmanager
 

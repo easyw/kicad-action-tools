@@ -11,7 +11,7 @@
 ### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 import sys, os
 import pcbnew
 import datetime

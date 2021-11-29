@@ -30,7 +30,7 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
-___version___="1.2.4"
+___version___="1.2.5"
 
 from . import Move2LayerDlg
 
