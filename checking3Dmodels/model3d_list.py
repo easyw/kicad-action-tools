@@ -15,11 +15,11 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.1.4"
+___version___="1.1.5"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
-import sys, os
+import sys, os, re
 import pcbnew
 import datetime
 import wx
