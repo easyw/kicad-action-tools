@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.8"
+___version___="1.2.9"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -390,6 +390,7 @@ class generatePOS( pcbnew.ActionPlugin ):
             GenPos(DirName)
         else:
             None  # Cancel
+        aParameters.Destroy()
 
 
 def GenPos(dir):                
