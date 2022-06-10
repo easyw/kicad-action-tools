@@ -12,9 +12,11 @@
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
 __version__ = '1.2.2'
-import sys, os
-import pcbnew
 import datetime
+import os
+import sys
+
+import pcbnew
 import wx
 from pcbnew import *
 
@@ -99,7 +101,9 @@ class snap_to_grid( pcbnew.ActionPlugin ):
 
     def Run(self):
         #self.pcb = GetBoard()
-        import sys,os
+        import os
+        import sys
+
         #mm_ius = 1000000.0
         #_pcbnew_frame = [x for x in wx.GetTopLevelWindows() if x.GetTitle().lower().startswith('pcbnew')][0]
         pcbnew_window = find_pcbnew_w()
@@ -154,7 +158,10 @@ def snap2grid(gridSizeMM,use_grid):
                 #print(mpxOnG,mpyOnG)
                 locked=''
                 if not module.IsLocked():
-                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                    if "6.99" in GetBuildVersion():
+                        module.SetPosition(VECTOR2I(mpxOnG,mpyOnG))
+                    else:
+                        module.SetPosition(wxPoint(mpxOnG,mpyOnG))
                 else:
                     locked='LOCKED'
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
@@ -177,7 +184,10 @@ def snap2grid(gridSizeMM,use_grid):
                 #print(mpxOnG,mpyOnG)
                 locked=''
                 if not module.IsLocked():
-                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                    if "6.99" in GetBuildVersion():
+                        module.SetPosition(VECTOR2I(mpxOnG,mpyOnG))
+                    else:
+                        module.SetPosition(wxPoint(mpxOnG,mpyOnG))
                 else:
                     locked='LOCKED'
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
@@ -198,7 +208,10 @@ def snap2grid(gridSizeMM,use_grid):
                 mpyOnG = int(mpy/FromMM(gridSizeMM))*FromMM(gridSizeMM) #+ auxOrigin.y
                 locked=''
                 if not module.IsLocked():
-                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                    if "6.99" in GetBuildVersion():
+                        module.SetPosition(VECTOR2I(mpxOnG,mpyOnG))
+                    else:
+                        module.SetPosition(wxPoint(mpxOnG,mpyOnG))
                 else:
                     locked='LOCKED'
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
@@ -209,7 +222,10 @@ def snap2grid(gridSizeMM,use_grid):
             Value = str(module.GetValue())
             Value=(Value[:17] + '..') if len(Value) > 19 else Value
             Value="{0:<20}".format(Value)
-            Rotation='{0:.1f}'.format((module.GetOrientation()/10))
+            if "6.99" in GetBuildVersion():
+                Rotation='{0:.1f}'.format((module.GetOrientation().AsDegrees()/10))
+            else:
+                Rotation='{0:.1f}'.format((module.GetOrientation()/10))
             Rotation="{0:>6}".format(Rotation)+'  '
             if module.GetLayer() == 0:
                 Layer="  top"

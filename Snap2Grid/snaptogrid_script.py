@@ -6,10 +6,12 @@
 # 
 #
 
-#import snaptogrid; import importlib; importlib.reload(snaptogrid)
-import sys, os
-import pcbnew
 import datetime
+import os
+#import snaptogrid; import importlib; importlib.reload(snaptogrid)
+import sys
+
+import pcbnew
 import wx
 from pcbnew import *
 
@@ -30,7 +32,9 @@ gridReference = 0.127 #1.27 #mm pcbnew.FromMM(1.0) #0.1mm
 
 
 def Snap2Grid(gridSizeMM,use_grid_origin):
-    import sys,os
+    import os
+    import sys
+
     #mm_ius = 1000000.0
     
     pcb = pcbnew.GetBoard()
@@ -47,7 +51,10 @@ def Snap2Grid(gridSizeMM,use_grid_origin):
                 mpxOnG = int(mpx/FromMM(gridSizeMM))*FromMM(gridSizeMM)+ gridOrigin.x
                 mpyOnG = int(mpy/FromMM(gridSizeMM))*FromMM(gridSizeMM)+ gridOrigin.y
                 print(mpxOnG,mpyOnG)
-                module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                if "6.99" in GetBuildVersion():
+                    module.SetPosition(VECTOR2I(mpxOnG,mpyOnG))
+                else:
+                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
                 #X_POS='{0:.4f}'.format(pcbnew.ToMM(module.GetPosition().x - gridOrigin.x ))
                 X_POS="{0:<11}".format(X_POS)
