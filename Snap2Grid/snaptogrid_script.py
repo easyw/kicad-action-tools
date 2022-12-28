@@ -6,14 +6,24 @@
 # 
 #
 
-import datetime
-import os
 #import snaptogrid; import importlib; importlib.reload(snaptogrid)
-import sys
-
+import sys, os
 import pcbnew
+import datetime
 import wx
 from pcbnew import *
+
+
+# Make snap2grid compatible with KiCAD 6.99
+if "6.99" in GetBuildVersion():
+    wxPoint = VECTOR2I
+
+def getOrientation(fp):
+    o = fp.GetOrientation()
+    if "6.99" in GetBuildVersion():
+        return o.AsDegrees()
+    return o / 10
+
 
 use_grid_origin = True
 gridReference = 0.127 #1.27 #mm pcbnew.FromMM(1.0) #0.1mm
@@ -32,9 +42,7 @@ gridReference = 0.127 #1.27 #mm pcbnew.FromMM(1.0) #0.1mm
 
 
 def Snap2Grid(gridSizeMM,use_grid_origin):
-    import os
-    import sys
-
+    import sys,os
     #mm_ius = 1000000.0
     
     pcb = pcbnew.GetBoard()
@@ -51,10 +59,7 @@ def Snap2Grid(gridSizeMM,use_grid_origin):
                 mpxOnG = int(mpx/FromMM(gridSizeMM))*FromMM(gridSizeMM)+ gridOrigin.x
                 mpyOnG = int(mpy/FromMM(gridSizeMM))*FromMM(gridSizeMM)+ gridOrigin.y
                 print(mpxOnG,mpyOnG)
-                if "6.99" in GetBuildVersion():
-                    module.SetPosition(VECTOR2I(mpxOnG,mpyOnG))
-                else:
-                    module.SetPosition(wxPoint(mpxOnG,mpyOnG))
+                module.SetPosition(wxPoint(mpxOnG,mpyOnG))
                 X_POS=str(module.GetPosition().x) # - gridOrigin.x)
                 #X_POS='{0:.4f}'.format(pcbnew.ToMM(module.GetPosition().x - gridOrigin.x ))
                 X_POS="{0:<11}".format(X_POS)
@@ -77,7 +82,7 @@ def Snap2Grid(gridSizeMM,use_grid_origin):
             Value = str(module.GetValue())
             Value=(Value[:17] + '..') if len(Value) > 19 else Value
             Value="{0:<20}".format(Value)
-            Rotation='{0:.1f}'.format((module.GetOrientation()/10))
+            Rotation='{0:.1f}'.format(getOrientation(module))
             Rotation="{0:>6}".format(Rotation)+'  '
             if module.GetLayer() == 0:
                 Layer="  top"
