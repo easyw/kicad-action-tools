@@ -15,15 +15,17 @@ from pcbnew import *
 
 
 # Make snap2grid compatible with KiCAD 6.99
-if "6.99" in GetBuildVersion():
+if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+    pass
+else: # kv7
     wxPoint = VECTOR2I
 
 def getOrientation(fp):
     o = fp.GetOrientation()
-    if "6.99" in GetBuildVersion():
+    if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+        return o / 10
+    else: # kv7
         return o.AsDegrees()
-    return o / 10
-
 
 use_grid_origin = True
 gridReference = 0.127 #1.27 #mm pcbnew.FromMM(1.0) #0.1mm

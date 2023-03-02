@@ -11,7 +11,7 @@
 ### plugins errors
 #import pcbnew;pcbnew.GetWizardsBackTrace()
 
-__version__ = '1.2.2'
+__version__ = '1.2.3'
 import sys, os
 import pcbnew
 import datetime
@@ -19,15 +19,18 @@ import wx
 from pcbnew import *
 
 # Make snap2grid compatible with KiCAD 6.99
-if "6.99" in GetBuildVersion():
+if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+    pass
+else: # kv7
     wxPoint = VECTOR2I
 
 def getOrientation(fp):
     o = fp.GetOrientation()
-    if "6.99" in GetBuildVersion():
+    if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+        return o / 10
+    else: # kv7
         return o.AsDegrees()
-    return o / 10
-
+    
 
 use_grid_origin = True
 
