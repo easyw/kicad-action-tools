@@ -13,7 +13,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.2.9"
+___version___="1.3.0"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -28,6 +28,19 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 """
 execfile ("C:/kicad-wb-1602/msys64/home/userC/out3Dm/pack-x86_64/share/kicad/scripting/plugins/getpos.py")
 """
+
+# Make positions compatible with KiCAD 7.0
+if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+    pass
+else: # kv7
+    wxPoint = VECTOR2I
+
+def getOrientation(fp):
+    o = fp.GetOrientation()
+    if hasattr(pcbnew, 'EDA_RECT'): # kv5,kv6
+        return o / 10
+    else: # kv7
+        return o.AsDegrees()
 
 def find_pcbnew_w():
     windows = wx.GetTopLevelWindows()
@@ -183,7 +196,7 @@ def generate_POS(dir):
                 PIN1_YPOS="{0:<11}".format(PIN1_YPOS)
                 break
 
-        Rotation='{0:.1f}'.format((module.GetOrientation()/10))
+        Rotation='{0:.1f}'.format((getOrientation(module)/10))
         Rotation="{0:>6}".format(Rotation)+'  '
         if module.GetLayer() == 0:
             Layer="  top"
