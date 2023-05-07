@@ -154,8 +154,7 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             if modal_result == wx.ID_OK:
                 LayerName = aParameters.m_comboBoxLayer.GetStringSelection()
                 LayerIndex = aParameters.m_comboBoxLayer.FindString(LayerName)
-                LayerStdName = pcbnew.BOARD_GetStandardLayerName(LayerIndex)
-                #wx.LogMessage(LayerName+';'+str(LayerIndex)+';'+LayerStdName)
+                # wx.LogMessage(LayerName+';'+str(LayerIndex))
                 MoveToLayer(board, LayerIndex)
             else:
                 None  # Cancel
