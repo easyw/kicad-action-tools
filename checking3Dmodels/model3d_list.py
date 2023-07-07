@@ -15,7 +15,7 @@
 #pcbnew.GetWizardsBackTrace()
 
 
-___version___="1.1.5"
+___version___="1.1.6"
 #wx.LogMessage("My message")
 #mm_ius = 1000000.0
 
@@ -125,6 +125,14 @@ def check3D():
                     content_log+=("Can not find model defined with enviroment variable:\n" + model_path) + lsep
                     fp_without_models.append((fp_ref, model_path))
                     continue
+            # check if path is relative ./
+            if model_path.startswith('.'):
+                m_path = os.path.normpath(proj_path + "//" + model_path)
+                # wx.LogMessage(m_path+lsep)
+                if os.path.exists(m_path):
+                    clean_model_path = m_path
+                else:
+                    clean_model_path = model_path
             # check if path is absolute or relative
             elif model_path == os.path.basename(model_path):
                 clean_model_path = os.path.normpath(proj_path + "//" + model_path)
@@ -165,17 +173,18 @@ def check3D():
                     clean_model_path = None
                     continue
     
-            model_path_without_extension = clean_model_path.rsplit('.', 1)[0]
+            # model_path_without_extension = clean_model_path.rsplit('.', 1)[0]
     
             found_at_least_one = False
-            if clean_model_path:
+            if 'clean_model_path' in locals():
                 model_without_extension = clean_model_path.rsplit('.', 1)[0]
                 for ext in ['.stp', '.step', '.stpZ']:
                     if os.path.exists(model_without_extension + ext):
                         found_at_least_one = True
+            else:
+                clean_model_path = ""
             if not found_at_least_one:
                 fp_without_models.append((fp.GetReference(), clean_model_path))
-    
             pass
         pass
     LogMsg=''
