@@ -107,8 +107,24 @@ def check3D():
         # for each 3D model find it's path
         for model in fp_models:
             model_path = model.m_Filename
+            # check if path is relative ./
+            if model_path.startswith('.'):
+                m_path = os.path.normpath(proj_path + "//" + model_path)
+                # wx.LogMessage(m_path+lsep)
+                if os.path.exists(m_path):
+                    clean_model_path = m_path
+                else:
+                    clean_model_path = model_path
+            elif "${KISYS3DMOD}" in model_path:
+                m_path = os.path.normpath(proj_path + "//" + model_path.strip("${KISYS3DMOD}"))
+                if os.path.exists(m_path):
+                    clean_model_path = m_path
+                else:
+                    content_log+=("Can not find model defined with enviroment variable:\n" + model_path) + lsep
+                    fp_without_models.append((fp_ref, model_path))
+                    continue                    
             # check if path is encoded with variables
-            if "${" in model_path or "$(" in model_path:
+            elif "${" in model_path or "$(" in model_path:
                 # get environment variable name
                 start_index = model_path.find("${") + 2 or model_path.find("$(") + 2
                 end_index = model_path.find("}") or model_path.find(")")
@@ -125,14 +141,6 @@ def check3D():
                     content_log+=("Can not find model defined with enviroment variable:\n" + model_path) + lsep
                     fp_without_models.append((fp_ref, model_path))
                     continue
-            # check if path is relative ./
-            if model_path.startswith('.'):
-                m_path = os.path.normpath(proj_path + "//" + model_path)
-                # wx.LogMessage(m_path+lsep)
-                if os.path.exists(m_path):
-                    clean_model_path = m_path
-                else:
-                    clean_model_path = model_path
             # check if path is absolute or relative
             elif model_path == os.path.basename(model_path):
                 clean_model_path = os.path.normpath(proj_path + "//" + model_path)
