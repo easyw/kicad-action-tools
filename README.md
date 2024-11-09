@@ -65,7 +65,7 @@ release "1.1.0"
     A script to Move Selected Drawing(s) to chosen new Layer (available only in GAL) 
     How to use:
     - move to GAL
-    - select some draw objects
+    - select some DRAW objects
     - call the plugin
     - select the new layer
     - selected draw objects will be moved to new layer

@@ -8,8 +8,6 @@ from . import FabricationPositions
 
 from . import MoveToLayer
 
-from . import PcbToDxf
-
 from . import Snap2Grid
 
 from . import checking3Dmodels

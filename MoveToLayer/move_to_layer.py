@@ -30,7 +30,7 @@ from pcbnew import *
 import base64
 from wx.lib.embeddedimage import PyEmbeddedImage
 import os
-___version___="1.2.5"
+___version___="1.2.6"
 
 from . import Move2LayerDlg
 
@@ -154,7 +154,8 @@ class move_to_draw_layer( pcbnew.ActionPlugin ):
             if modal_result == wx.ID_OK:
                 LayerName = aParameters.m_comboBoxLayer.GetStringSelection()
                 LayerIndex = aParameters.m_comboBoxLayer.FindString(LayerName)
-                # wx.LogMessage(LayerName+';'+str(LayerIndex))
+                # LayerStdName = pcbnew.BOARD_GetStandardLayerName(LayerIndex)
+                # wx.LogMessage(LayerName+';'+str(LayerIndex)+';'+LayerStdName)
                 MoveToLayer(board, LayerIndex)
             else:
                 None  # Cancel
